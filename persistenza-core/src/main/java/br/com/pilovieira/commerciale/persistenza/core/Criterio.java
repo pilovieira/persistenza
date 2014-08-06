@@ -1,4 +1,4 @@
-package br.com.pilovieira.commerciale.persistenza;
+package br.com.pilovieira.commerciale.persistenza.core;
 
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Restrictions;
