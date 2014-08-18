@@ -11,6 +11,7 @@ public class CriterioEntre extends Criterio {
 		CriterioEntre criterio = new CriterioEntre();
 		criterio.atributo = atributo;
 		criterio.valor = valorMenor;
+		criterio.valorMaior = valorMaior;
 		return criterio;
 	}
 	
