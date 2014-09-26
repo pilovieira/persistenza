@@ -100,13 +100,30 @@ public class Persistenza {
 		return list.isEmpty() ? null : list.get(0);
 	}
 	
-	public static <T> T singleton(Class<T> clazz) {
+	public static <T> T unique(Class<T> clazz) {
 		Session session = createSession();
 		T singleton = (T) session.createCriteria(clazz).uniqueResult();
 		session.close();
 		return singleton;
 	}
-	
+
+	public static <T> T singleton(Class<T> clazz) {
+		T saved = unique(clazz);
+		
+		if (saved == null)
+			newSingleton(clazz);
+		
+		return unique(clazz);
+	}
+
+	private static <T> void newSingleton(Class<T> clazz) {
+		try {
+			insert(clazz.newInstance());
+		} catch (InstantiationException | IllegalAccessException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
 	private static <T> List<T> asSet(List<T> list) {
 		return new ArrayList<T>(new HashSet<T>(list));
 	}
