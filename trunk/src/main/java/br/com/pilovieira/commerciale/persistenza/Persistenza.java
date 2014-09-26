@@ -1,4 +1,4 @@
-package br.com.pilovieira.commerciale.persistenza.core;
+package br.com.pilovieira.commerciale.persistenza;
 
 import java.util.ArrayList;
 import java.util.Arrays;
