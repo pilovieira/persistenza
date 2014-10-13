@@ -8,18 +8,17 @@ import br.com.pilovieira.commerciale.persistenza.db.Database;
 
 public class PersistenzaManager {
 	
+	private static final String PROPERTY_DEVELOP_MODE = "persistenza.develop";
+	
 	private static SessionFactory factory;
 	private static Database database;
 	
-	public static void setFactory(SessionFactory factory) {
-		PersistenzaManager.factory = factory;
+	public static void load(Class<? extends Database> databaseClass) {
+		loadDatabase(databaseClass);
+		loadEntities();
 	}
 	
-	static SessionFactory getFactory() {
-		return factory;
-	}
-	
-	public static void loadDatabase(Class<? extends Database> databaseClass) {
+	private static void loadDatabase(Class<? extends Database> databaseClass) {
 		try {
 			database = databaseClass.newInstance();
 			database.load();
@@ -27,11 +26,24 @@ public class PersistenzaManager {
 			throw new RuntimeException("Problema ao carregar properties da database", e);
 		}
 	}
+
+	private static void loadEntities() {
+		SessionFactoryBuilder sessionFactoryBuilder = new SessionFactoryBuilder();
+		factory = sessionFactoryBuilder.build();
+	}
 	
 	public static Connection getConnection() {
 		if (database == null)
 			throw new RuntimeException("Database not loaded.");
 		
 		return database.getConnection();
+	}
+
+	public static SessionFactory getFactory() {
+		return factory;
+	}
+	
+	static boolean isDevelopMode() {
+		return System.getProperty(PROPERTY_DEVELOP_MODE, null) != null;
 	}
 }
