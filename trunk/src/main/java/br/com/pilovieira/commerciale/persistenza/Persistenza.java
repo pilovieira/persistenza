@@ -8,20 +8,13 @@ import java.util.List;
 
 import org.hibernate.Criteria;
 import org.hibernate.Session;
-import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
 
 @SuppressWarnings("unchecked")
 public class Persistenza {
 
-	private static SessionFactory factory;
-	
-	public static void setFactory(SessionFactory factory) {
-		Persistenza.factory = factory;
-	}
-	
 	private static Session createSession() {
-		return factory.openSession();
+		return PersistenzaManager.getFactory().openSession();
 	}
 
 	public static void insert(Object entidade) {
