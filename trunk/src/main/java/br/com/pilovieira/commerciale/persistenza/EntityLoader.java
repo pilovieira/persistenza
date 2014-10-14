@@ -78,12 +78,10 @@ public class EntityLoader {
 	private void addEntity(String className) {
 		try {
 			Class<?> classLoaded = SessionFactoryBuilder.class.getClassLoader().loadClass(className);
-			if (classLoaded.isAnnotationPresent(Entity.class)) {
+			if (classLoaded.isAnnotationPresent(Entity.class))
 				config.addAnnotatedClass(classLoaded);
-				System.out.println("adicionando entity " + className);
-			}
-		} catch (Throwable t) {
-			t.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
 		}		
 	}
 }
