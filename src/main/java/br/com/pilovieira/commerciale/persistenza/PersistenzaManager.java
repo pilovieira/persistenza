@@ -7,9 +7,6 @@ import org.hibernate.SessionFactory;
 import br.com.pilovieira.commerciale.persistenza.db.Database;
 
 public class PersistenzaManager {
-	
-	private static final String PROPERTY_DEVELOP_MODE = "persistenza.develop";
-	
 	private static SessionFactory factory;
 	private static Database database;
 	
@@ -41,9 +38,5 @@ public class PersistenzaManager {
 
 	public static SessionFactory getFactory() {
 		return factory;
-	}
-	
-	static boolean isDevelopMode() {
-		return System.getProperty(PROPERTY_DEVELOP_MODE, null) != null;
 	}
 }
