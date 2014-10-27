@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>br.com.pilovieira.persistenza</groupId>
 	<artifactId>persistenza</artifactId>
-	<version>0.0.4-SNAPSHOT</version>
+	<version>0.0.5-SNAPSHOT</version>
 	<name>Persistenza</name>
 	<description>Camada de fácil acesso a bd.</description>
 	<packaging>pom</packaging>
