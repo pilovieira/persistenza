@@ -1,10 +1,10 @@
-package br.com.pilovieira.commerciale.persistenza;
+package br.com.pilovieira.persistenza;
 
 import java.sql.Connection;
 
 import org.hibernate.SessionFactory;
 
-import br.com.pilovieira.commerciale.persistenza.db.Database;
+import br.com.pilovieira.persistenza.db.Database;
 
 public class PersistenzaManager {
 	private static SessionFactory factory;
@@ -15,7 +15,7 @@ public class PersistenzaManager {
 		loadEntities();
 	}
 	
-	private static void loadDatabase(Class<? extends Database> databaseClass) {
+	public static void loadDatabase(Class<? extends Database> databaseClass) {
 		try {
 			database = databaseClass.newInstance();
 			database.load();

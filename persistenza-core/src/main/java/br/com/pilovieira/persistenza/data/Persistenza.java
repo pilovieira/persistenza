@@ -1,4 +1,4 @@
-package br.com.pilovieira.commerciale.persistenza.data;
+package br.com.pilovieira.persistenza.data;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -10,7 +10,7 @@ import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.criterion.Restrictions;
 
-import br.com.pilovieira.commerciale.persistenza.PersistenzaManager;
+import br.com.pilovieira.persistenza.PersistenzaManager;
 
 @SuppressWarnings("unchecked")
 public class Persistenza {
