@@ -1,4 +1,4 @@
-package br.com.pilovieira.commerciale.persistenza.db;
+package br.com.pilovieira.persistenza.db;
 
 
 

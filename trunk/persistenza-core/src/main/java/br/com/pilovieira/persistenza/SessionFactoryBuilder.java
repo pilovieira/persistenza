@@ -1,4 +1,4 @@
-package br.com.pilovieira.commerciale.persistenza;
+package br.com.pilovieira.persistenza;
 
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.AnnotationConfiguration;

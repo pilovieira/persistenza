@@ -1,4 +1,4 @@
-package br.com.pilovieira.commerciale.persistenza;
+package br.com.pilovieira.persistenza;
 
 import java.io.File;
 import java.io.IOException;
@@ -17,13 +17,18 @@ public class EntityLoader {
 	private static final String EXTENSION_JAR = ".jar";
 	
 	private AnnotationConfiguration config;
-	private File root = new File("").getAbsoluteFile();
+	private File root;
 	
 	public EntityLoader(AnnotationConfiguration config) {
+		this(new File("").getAbsoluteFile(), config);
+	}
+
+	public EntityLoader(File file, AnnotationConfiguration config) {
+		this.root = file;
 		this.config = config;
 	}
 	
-	void load() {
+	public void load() {
 		try {
 			loadEntity(root);
 		} catch (IOException e) {
@@ -77,7 +82,7 @@ public class EntityLoader {
 
 	private void addEntity(String className) {
 		try {
-			Class<?> classLoaded = SessionFactoryBuilder.class.getClassLoader().loadClass(className);
+			Class<?> classLoaded = Thread.currentThread().getContextClassLoader().loadClass(className);
 			if (classLoaded.isAnnotationPresent(Entity.class))
 				config.addAnnotatedClass(classLoaded);
 		} catch (ClassNotFoundException e) {
