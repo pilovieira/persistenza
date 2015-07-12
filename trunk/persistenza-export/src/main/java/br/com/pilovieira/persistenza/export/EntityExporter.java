@@ -27,20 +27,37 @@ public class EntityExporter {
 		
 		new EntityLoader(selectedFile, config).load();
 		schemaExport = new SchemaExport(config);
+		checkStatus();
 	}
 	
-	List<String> getEntities() {
+	public List<String> getEntities() {
 		@SuppressWarnings("unchecked")
 		List<String> values = new ArrayList<String>(new HashSet<String>(config.getImports().values()));
 		Collections.sort(values);
 		return values;
 	}
 	
-	void drop() {
-		schemaExport.drop(true, true);
+	public void export(boolean drop, boolean create) {
+		if (drop)
+			schemaExport.drop(true, true);
+		if (create)
+			schemaExport.create(true, true);
+		
+		checkStatus();
 	}
 	
-	void create() {
-		schemaExport.create(true, true);
+	private void checkStatus() {
+		if (schemaExport.getExceptions().isEmpty())
+			return;
+		
+		throwExceptions();
+	}
+
+	private void throwExceptions() {
+		String exceptions = "Executado com as seguintes exceptions:\r\n";
+		for (Object ex : schemaExport.getExceptions())
+			exceptions += ex.toString() + "\r\n";
+			
+		throw new RuntimeException(exceptions);
 	}	
 }
