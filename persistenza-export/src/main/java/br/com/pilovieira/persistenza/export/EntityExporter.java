@@ -1,6 +1,5 @@
 package br.com.pilovieira.persistenza.export;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
@@ -13,19 +12,17 @@ import br.com.pilovieira.persistenza.EntityLoader;
 
 public class EntityExporter {
 
-	private File selectedFile;
 	private AnnotationConfiguration config;
 	private SchemaExport schemaExport; 
 
-	public EntityExporter(File selectedFile) {
-		this.selectedFile = selectedFile;
+	public EntityExporter() {
 		load();
 	}
 
 	private void load() {
 		config = new AnnotationConfiguration();
 		
-		new EntityLoader(selectedFile, config).load();
+		new EntityLoader(config).load();
 		schemaExport = new SchemaExport(config);
 		checkStatus();
 	}

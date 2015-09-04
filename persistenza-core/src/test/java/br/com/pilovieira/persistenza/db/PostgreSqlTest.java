@@ -5,10 +5,7 @@ import static junit.framework.Assert.assertNull;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import java.sql.Connection;
 import java.util.Properties;
-
-import junit.framework.Assert;
 
 import org.junit.After;
 import org.junit.Before;
