@@ -1,105 +1,85 @@
 package br.com.pilovieira.persistenza.data;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
 
-import org.hibernate.Criteria;
 import org.hibernate.Session;
+import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Restrictions;
 
-import br.com.pilovieira.persistenza.PersistenzaManager;
+import com.google.common.base.Function;
 
 @SuppressWarnings("unchecked")
 public class Persistenza {
+	
+	private static SessionManager sessionManager = SessionManager.getInstance();
 
-	private static Session createSession() {
-		return PersistenzaManager.getFactory().openSession();
+	public static void insert(final Object entidade) {
+		sessionManager.commit(new Function<Session, Void>() {
+			@Override
+			public Void apply(Session session) {
+				session.save(entidade);
+				return null;
+			}
+		});
 	}
 
-	public static void insert(Object entidade) {
-		Session session = createSession();
-		session.getTransaction().begin();
-		session.save(entidade);
-		session.getTransaction().commit();
-		session.close();
+	public static void update(final Object entidade) {
+		sessionManager.commit(new Function<Session, Void>() {
+			@Override
+			public Void apply(Session session) {
+				session.update(entidade);
+				return null;
+			}
+		});
 	}
 
-	public static void update(Object entidade) {
-		Session session = createSession();
-		session.getTransaction().begin();
-		session.update(entidade);
-		session.getTransaction().commit();
-		session.close();
+	public static void delete(final Object entidade) {
+		sessionManager.commit(new Function<Session, Void>() {
+			@Override
+			public Void apply(Session session) {
+				session.delete(entidade);
+				return null;
+			}
+		});
 	}
 
-	public static void delete(Object entidade) {
-		Session session = createSession();
-		session.getTransaction().begin();
-		session.delete(entidade);
-		session.getTransaction().commit();
-		session.close();
-	}
-
-	public static <T> List<T> all(Class<T> clazz) {
-		Session session = createSession();
-		List<T> list = (List<T>) session.createCriteria(clazz).list();
-		session.close();
-		return asSet(list);
+	public static <T> List<T> all(final Class<T> clazz) {
+		return sessionManager.list(clazz, new Criterion[]{});
 	}
 	
-	public static <T> List<T> like(Class<T> clazz, String atributo, String valor) {
-		Session session = createSession();
-		Criteria criteria = session.createCriteria(clazz);
-		criteria.add(Restrictions.ilike(atributo, valor));
-		List<T> list = (List<T>) criteria.list();
-		session.close();
-		return asSet(list);
-	}
-	
-	public static <T> List<T> search(Class<T> clazz, String atributo, Object valor) {
-		return search(clazz, Arrays.asList(Criterio.criterioEq(atributo, valor)));
-	}
-	
-	public static <T> List<T> search(Class<T> clazz, List<Criterio> criterios) {
-		Session session = createSession();
-		Criteria criteria = session.createCriteria(clazz);
-		for (Criterio criterio : criterios)
-			criteria.add(criterio.produce());
-		List<T> list = (List<T>) criteria.list();
-		session.close();
-		return asSet(list);
+	public static <T> List<T> like(final Class<T> clazz, final String atributo, final String valor) {
+		return sessionManager.list(clazz, Restrictions.ilike(atributo, valor));
 	}
 
-	public static <T> List<T> between(Class<T> clazz, String atributo, Date dataInicio, Date dataFim) {
-		Session session = createSession();
-		Criteria criteria = session.createCriteria(clazz);
-		criteria.add(Restrictions.between(atributo, dataInicio, dataFim));
-		List<T> list = (List<T>) criteria.list();
-		session.close();
-		return asSet(list);
-	}
-
-	public static <T> List<T> searchLike(Class<T> clazz, String atributo, String valor) {
+	public static <T> List<T> likeString(Class<T> clazz, String atributo, String valor) {
 		return like(clazz, atributo, "%" + valor + "%");
 	}
 	
-	public static <T> T get(Class<T> clazz, int id) {
-		Session session = createSession();
-		Criteria criteria = session.createCriteria(clazz);
-		criteria.add(Restrictions.idEq(id));
-		List<T> list = (List<T>) criteria.list();
-		session.close();
+	public static <T> List<T> search(Class<T> clazz, String atributo, Object valor) {
+		return search(clazz, PersistenzaRestrictions.eq(atributo, valor));
+	}
+	
+	public static <T> List<T> search(Class<T> clazz, Criterion... criterions) {
+		return sessionManager.list(clazz, criterions);
+	}
+
+	public static <T> List<T> between(final Class<T> clazz, final String atributo, final Date dataInicio, final Date dataFim) {
+		return sessionManager.list(clazz, Restrictions.between(atributo, dataInicio, dataFim));
+	}
+
+	public static <T> T get(final Class<T> clazz, final int id) {
+		List<T> list = sessionManager.list(clazz, Restrictions.idEq(id));
 		return list.isEmpty() ? null : list.get(0);
 	}
 	
-	public static <T> T unique(Class<T> clazz) {
-		Session session = createSession();
-		T singleton = (T) session.createCriteria(clazz).uniqueResult();
-		session.close();
-		return singleton;
+	public static <T> T unique(final Class<T> clazz) {
+		return sessionManager.execute(new Function<Session, T>() {
+			@Override
+			public T apply(Session session) {
+				return (T) session.createCriteria(clazz).uniqueResult();
+			}
+		});
 	}
 
 	public static <T> T singleton(Class<T> clazz) {
@@ -115,11 +95,7 @@ public class Persistenza {
 		try {
 			insert(clazz.newInstance());
 		} catch (InstantiationException | IllegalAccessException e) {
-			throw new RuntimeException(e);
+			throw new RuntimeException("Exception creating new instance.", e);
 		}
-	}
-
-	private static <T> List<T> asSet(List<T> list) {
-		return new ArrayList<T>(new HashSet<T>(list));
 	}
 }
