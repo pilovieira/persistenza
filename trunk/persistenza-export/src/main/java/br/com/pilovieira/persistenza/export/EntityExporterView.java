@@ -1,9 +1,5 @@
 package br.com.pilovieira.persistenza.export;
 
-import static br.com.pilovieira.persistenza.db.Database.CONNECTION_PASSWORD;
-import static br.com.pilovieira.persistenza.db.Database.CONNECTION_URL;
-import static br.com.pilovieira.persistenza.db.Database.CONNECTION_USERNAME;
-import static java.lang.System.setProperty;
 import static javax.swing.JFileChooser.APPROVE_OPTION;
 import static javax.swing.JOptionPane.showMessageDialog;
 
@@ -26,7 +22,8 @@ import javax.swing.border.TitledBorder;
 
 import net.miginfocom.swing.MigLayout;
 import br.com.pilovieira.persistenza.PersistenzaManager;
-import br.com.pilovieira.persistenza.db.Postgre;
+import br.com.pilovieira.persistenza.db.ConnectionData;
+import br.com.pilovieira.persistenza.db.PostgreSql;
 
 public class EntityExporterView extends JFrame {
 
@@ -152,11 +149,8 @@ public class EntityExporterView extends JFrame {
 		}
 		
 		private void loadDatabase() {
-			setProperty(CONNECTION_URL, getUrl());
-			setProperty(CONNECTION_USERNAME, textUser.getText());
-			setProperty(CONNECTION_PASSWORD, textPass.getText());
-			
-			PersistenzaManager.loadDatabase(Postgre.class);
+			ConnectionData connectionData = new ConnectionData(getUrl(), textUser.getText(), textPass.getText());
+			PersistenzaManager.setDatabaseManager(new PostgreSql(connectionData));
 		}
 
 		private String getUrl() {
