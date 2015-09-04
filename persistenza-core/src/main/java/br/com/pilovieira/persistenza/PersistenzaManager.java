@@ -4,36 +4,36 @@ import java.sql.Connection;
 
 import org.hibernate.SessionFactory;
 
-import br.com.pilovieira.persistenza.db.Database;
+import br.com.pilovieira.persistenza.db.DatabaseManager;
 
 public class PersistenzaManager {
-	private static SessionFactory factory;
-	private static Database database;
 	
-	public static void load(Class<? extends Database> databaseClass) {
-		loadDatabase(databaseClass);
+	private static SessionFactory factory;
+	private static DatabaseManager database;
+	
+	public static void setDatabaseManager(DatabaseManager databaseManager) {
+		validateDatabaseManager(databaseManager);
+		database = databaseManager;
+		database.loadProperties();
+	}
+	
+	public static void load() {
 		loadEntities();
 	}
 	
-	public static void loadDatabase(Class<? extends Database> databaseClass) {
-		try {
-			database = databaseClass.newInstance();
-			database.load();
-		} catch (InstantiationException | IllegalAccessException e) {
-			throw new RuntimeException("Problema ao carregar properties da database", e);
-		}
-	}
-
 	private static void loadEntities() {
 		SessionFactoryBuilder sessionFactoryBuilder = new SessionFactoryBuilder();
 		factory = sessionFactoryBuilder.build();
 	}
 	
 	public static Connection getConnection() {
-		if (database == null)
-			throw new RuntimeException("Database not loaded.");
-		
+		validateDatabaseManager(database);
 		return database.getConnection();
+	}
+
+	private static void validateDatabaseManager(DatabaseManager databaseManager) {
+		if (databaseManager == null)
+			throw new RuntimeException("Database not loaded.");
 	}
 
 	public static SessionFactory getFactory() {
