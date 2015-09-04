@@ -186,7 +186,7 @@ public class EntityExporterView extends JFrame {
 		}
 
 		private void createExporter() {
-			exporter = new EntityExporter(selectedFile);
+			exporter = new EntityExporter();
 		}
 		
 		private void listEntities() {
