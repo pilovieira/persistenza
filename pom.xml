@@ -8,6 +8,11 @@
 	<description>Camada de fácil acesso a bd.</description>
 	<packaging>pom</packaging>
 
+	<modules>
+		<module>persistenza-core</module>
+		<module>persistenza-export</module>
+	</modules>
+
 	<dependencyManagement>
 		<dependencies>
 			<dependency>
@@ -77,10 +82,6 @@
 		</dependencies>
 	</dependencyManagement>
 
-	<scm>
-		<developerConnection>scm:svn:https://subversion.assembla.com/svn/lockTracker.persistenza/trunk</developerConnection>
-	</scm>
-
 	<build>
 		<plugins>
 			<plugin>
@@ -109,14 +110,14 @@
 				<version>2.5.2</version>
 				<configuration>
 					<tagBase>
-						https://subversion.assembla.com/svn/lockTracker.persistenza/trunk
+						https://subversion.assembla.com/svn/lockTracker.persistenza/tags
 					</tagBase>
 				</configuration>
 			</plugin>
 		</plugins>
 	</build>
-	<modules>
-		<module>persistenza-core</module>
-		<module>persistenza-export</module>
-	</modules>
+
+	<scm>
+		<developerConnection>scm:svn:https://subversion.assembla.com/svn/lockTracker.persistenza/trunk</developerConnection>
+	</scm>
 </project>
