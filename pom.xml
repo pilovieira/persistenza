@@ -122,8 +122,8 @@
 
 	<distributionManagement>
 		<repository>
-			<id>piloVieiraRepo</id>
-			<name>PiloVieira Repo</name>
+			<id>PiloVieiraReleases</id>
+			<name>PiloVieira Releases Repo</name>
 			<url>ftp://pilovieira.com.br/repo</url>
 		</repository>
 	</distributionManagement>
