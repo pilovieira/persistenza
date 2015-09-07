@@ -1,9 +1,8 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>br.com.pilovieira.persistenza</groupId>
 	<artifactId>persistenza</artifactId>
-	<version>0.0.6-SNAPSHOT</version>
+	<version>0.0.6</version>
 	<name>Persistenza</name>
 	<description>Camada de fácil acesso a bd.</description>
 	<packaging>pom</packaging>
@@ -118,7 +117,7 @@
 	</build>
 
 	<scm>
-		<developerConnection>scm:svn:https://subversion.assembla.com/svn/lockTracker.persistenza/trunk</developerConnection>
+		<developerConnection>scm:svn:https://subversion.assembla.com/svn/lockTracker.persistenza/tags/persistenza-0.0.6</developerConnection>
 	</scm>
 
 	<distributionManagement>
