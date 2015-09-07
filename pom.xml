@@ -1,4 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>br.com.pilovieira.persistenza</groupId>
 	<artifactId>persistenza</artifactId>
@@ -119,4 +120,12 @@
 	<scm>
 		<developerConnection>scm:svn:https://subversion.assembla.com/svn/lockTracker.persistenza/trunk</developerConnection>
 	</scm>
+
+	<distributionManagement>
+		<repository>
+			<id>piloVieiraRepo</id>
+			<name>PiloVieira Repo</name>
+			<url>ftp://pilovieira.com.br/repo</url>
+		</repository>
+	</distributionManagement>
 </project>
