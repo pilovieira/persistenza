@@ -77,6 +77,10 @@
 		</dependencies>
 	</dependencyManagement>
 
+	<scm>
+		<developerConnection>scm:svn:https://subversion.assembla.com/svn/lockTracker.persistenza/trunk</developerConnection>
+	</scm>
+
 	<build>
 		<plugins>
 			<plugin>
@@ -99,6 +103,15 @@
 						</goals>
 					</execution>
 				</executions>
+			</plugin>
+			<plugin>
+				<artifactId>maven-release-plugin</artifactId>
+				<version>2.5.2</version>
+				<configuration>
+					<tagBase>
+						https://subversion.assembla.com/svn/lockTracker.persistenza/trunk
+					</tagBase>
+				</configuration>
 			</plugin>
 		</plugins>
 	</build>
