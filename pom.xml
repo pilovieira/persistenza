@@ -124,6 +124,8 @@
 	</build>
 
 	<scm>
+		<url>https://subversion.assembla.com/svn/lockTracker.persistenza/trunk</url>        
+		<connection>scm:svn:https://subversion.assembla.com/svn/lockTracker.persistenza/trunk</connection>
 		<developerConnection>scm:svn:https://subversion.assembla.com/svn/lockTracker.persistenza/trunk</developerConnection>
 	</scm>
 
