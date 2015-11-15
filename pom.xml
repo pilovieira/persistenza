@@ -10,6 +10,7 @@
 	<modules>
 		<module>persistenza-core</module>
 		<module>persistenza-export</module>
+		<module>persistenza-install</module>
 	</modules>
 
 	<dependencyManagement>
