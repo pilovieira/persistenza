@@ -6,7 +6,7 @@
 		<artifactId>persistenza</artifactId>
 		<version>3.1-SNAPSHOT</version>
 	</parent>
-	<artifactId>persistenza-db-test</artifactId>
+	<artifactId>persistenza-test</artifactId>
 	<name>Persistenza Functional Tests</name>
 	<dependencies>
 		<dependency>

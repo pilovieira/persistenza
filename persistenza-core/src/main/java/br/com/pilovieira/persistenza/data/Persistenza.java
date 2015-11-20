@@ -25,21 +25,23 @@ public class Persistenza {
 		});
 	}
 
-	public static void update(final Object entidade) {
+	public static void update(final Object... entities) {
 		sessionManager.commit(new Function<Session, Void>() {
 			@Override
 			public Void apply(Session session) {
-				session.update(entidade);
+				for (Object entity : entities)
+					session.update(entity);
 				return null;
 			}
 		});
 	}
 
-	public static void delete(final Object entidade) {
+	public static void delete(final Object... entities) {
 		sessionManager.commit(new Function<Session, Void>() {
 			@Override
 			public Void apply(Session session) {
-				session.delete(entidade);
+				for (Object entity : entities)
+					session.delete(entity);
 				return null;
 			}
 		});
