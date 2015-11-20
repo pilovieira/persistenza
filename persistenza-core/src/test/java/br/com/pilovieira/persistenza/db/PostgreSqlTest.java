@@ -45,19 +45,19 @@ public class PostgreSqlTest {
 	
 	@Test
 	public void loadProperties() {
-		assertNull(System.getProperty(DatabaseManager.DIALECT));
-		assertNull(System.getProperty(DatabaseManager.DRIVER_CLASS));
-		assertNull(System.getProperty(DatabaseManager.CONNECTION_URL));
-		assertNull(System.getProperty(DatabaseManager.CONNECTION_USERNAME));
-		assertNull(System.getProperty(DatabaseManager.CONNECTION_PASSWORD));
+		assertNull(System.getProperty(DatabaseManager.PROPERTY_DIALECT));
+		assertNull(System.getProperty(DatabaseManager.PROPERTY_DRIVER_CLASS));
+		assertNull(System.getProperty(DatabaseManager.PROPERTY_CONNECTION_URL));
+		assertNull(System.getProperty(DatabaseManager.PROPERTY_CONNECTION_USERNAME));
+		assertNull(System.getProperty(DatabaseManager.PROPERTY_CONNECTION_PASSWORD));
 		
 		subject.loadProperties();
 		
-		assertEquals("Property", System.getProperty(DatabaseManager.DIALECT), "org.hibernate.dialect.PostgreSQLDialect");
-		assertEquals("Property", System.getProperty(DatabaseManager.DRIVER_CLASS), "org.postgresql.Driver");
-		assertEquals("Property", System.getProperty(DatabaseManager.CONNECTION_URL), URL);
-		assertEquals("Property", System.getProperty(DatabaseManager.CONNECTION_USERNAME), USER);
-		assertEquals("Property", System.getProperty(DatabaseManager.CONNECTION_PASSWORD), PASS);
+		assertEquals("Property", System.getProperty(DatabaseManager.PROPERTY_DIALECT), "org.hibernate.dialect.PostgreSQLDialect");
+		assertEquals("Property", System.getProperty(DatabaseManager.PROPERTY_DRIVER_CLASS), "org.postgresql.Driver");
+		assertEquals("Property", System.getProperty(DatabaseManager.PROPERTY_CONNECTION_URL), URL);
+		assertEquals("Property", System.getProperty(DatabaseManager.PROPERTY_CONNECTION_USERNAME), USER);
+		assertEquals("Property", System.getProperty(DatabaseManager.PROPERTY_CONNECTION_PASSWORD), PASS);
 		
 		verify(connectionData).getUrl();
 		verify(connectionData).getUsername();

@@ -14,11 +14,12 @@ public class Persistenza {
 	
 	private static SessionManager sessionManager = SessionManager.getInstance();
 
-	public static void insert(final Object entidade) {
+	public static void insert(final Object... entities) {
 		sessionManager.commit(new Function<Session, Void>() {
 			@Override
 			public Void apply(Session session) {
-				session.save(entidade);
+				for (Object entity : entities)
+					session.save(entity);
 				return null;
 			}
 		});
