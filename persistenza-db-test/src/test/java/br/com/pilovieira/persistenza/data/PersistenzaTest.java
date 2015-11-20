@@ -2,42 +2,28 @@ package br.com.pilovieira.persistenza.data;
 
 import static junit.framework.Assert.assertEquals;
 
-import java.sql.Connection;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.List;
 
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import br.com.pilovieira.persistenza.PersistenzaManager;
-import br.com.pilovieira.persistenza.db.ConnectionData;
-import br.com.pilovieira.persistenza.db.HyperSql;
 import br.com.pilovieira.persistenza.entity.Cat;
 import br.com.pilovieira.persistenza.entity.Dog;
 import br.com.pilovieira.persistenza.entity.Man;
+import br.com.pilovieira.persistenza.util.DatabaseSetup;
 
 public class PersistenzaTest {
 	
 	@BeforeClass
 	public static void initialize() {
-		System.setProperty("hibernate.hbm2ddl.auto", "create-drop");
-		
-		HyperSql hyperSql = new HyperSql(new ConnectionData("jdbc:hsqldb:mem:.", "sa", ""));
-		hyperSql.setShowSql(true);
-		
-		PersistenzaManager.setDatabaseManager(hyperSql);
-		PersistenzaManager.load();
+		DatabaseSetup.initialize(Dog.class, Man.class, Cat.class);
 	}
 	
 	@Before
 	public void setup() throws SQLException {
-		Connection connection = PersistenzaManager.getConnection();
-		Statement statement = connection.createStatement();
-		statement.executeUpdate("delete from " + Man.class.getSimpleName().toLowerCase());
-		statement.executeUpdate("delete from " + Dog.class.getSimpleName().toLowerCase());
-		statement.executeUpdate("delete from " + Cat.class.getSimpleName().toLowerCase());
+		DatabaseSetup.clear(Man.class, Dog.class, Cat.class);
 	}
 	
 	@Test
