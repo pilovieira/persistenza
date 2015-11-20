@@ -11,7 +11,7 @@
 		<module>persistenza-core</module>
 		<module>persistenza-export</module>
 		<module>persistenza-install</module>
-		<module>persistenza-db-test</module>
+		<module>persistenza-test</module>
 	</modules>
 
 	<dependencyManagement>
