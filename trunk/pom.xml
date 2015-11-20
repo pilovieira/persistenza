@@ -11,6 +11,7 @@
 		<module>persistenza-core</module>
 		<module>persistenza-export</module>
 		<module>persistenza-install</module>
+		<module>persistenza-db-test</module>
 	</modules>
 
 	<dependencyManagement>
@@ -45,11 +46,6 @@
 				<groupId>org.slf4j</groupId>
 				<artifactId>slf4j-log4j12</artifactId>
 				<version>1.5.10</version>
-			</dependency>
-			<dependency>
-				<groupId>postgresql</groupId>
-				<artifactId>postgresql</artifactId>
-				<version>9.1-901.jdbc4</version>
 			</dependency>
 			<dependency>
 				<groupId>com.google.guava</groupId>

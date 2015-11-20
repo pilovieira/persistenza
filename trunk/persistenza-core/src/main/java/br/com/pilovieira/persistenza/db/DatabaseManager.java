@@ -7,24 +7,31 @@ import java.sql.DriverManager;
 
 public abstract class DatabaseManager {
 	
-	static final String DIALECT = "hibernate.dialect";
-	static final String DRIVER_CLASS = "hibernate.connection.driver_class";
-	static final String CONNECTION_URL = "hibernate.connection.url";
-	static final String CONNECTION_USERNAME = "hibernate.connection.username";
-	static final String CONNECTION_PASSWORD = "hibernate.connection.password";
+	static final String PROPERTY_DIALECT = "hibernate.dialect";
+	static final String PROPERTY_DRIVER_CLASS = "hibernate.connection.driver_class";
+	static final String PROPERTY_CONNECTION_URL = "hibernate.connection.url";
+	static final String PROPERTY_CONNECTION_USERNAME = "hibernate.connection.username";
+	static final String PROPERTY_CONNECTION_PASSWORD = "hibernate.connection.password";
+	private static final String PROPERTY_SHOW_SQL = "hibernate.show_sql";
 
 	private ConnectionData connectionData;
+	private boolean showSql;
 	
 	public DatabaseManager(ConnectionData connectionData) {
 		this.connectionData = connectionData;
 	}
 	
 	public void loadProperties() {
-		setProperty(DIALECT, getDialect());
-		setProperty(DRIVER_CLASS, getConnectionDriverClass());
-		setProperty(CONNECTION_URL, connectionData.getUrl());
-		setProperty(CONNECTION_USERNAME, connectionData.getUsername());
-		setProperty(CONNECTION_PASSWORD, connectionData.getPassword());
+		setProperty(PROPERTY_SHOW_SQL, String.valueOf(showSql));
+		setProperty(PROPERTY_DIALECT, getDialect());
+		setProperty(PROPERTY_DRIVER_CLASS, getConnectionDriverClass());
+		setProperty(PROPERTY_CONNECTION_URL, connectionData.getUrl());
+		setProperty(PROPERTY_CONNECTION_USERNAME, connectionData.getUsername());
+		setProperty(PROPERTY_CONNECTION_PASSWORD, connectionData.getPassword());
+	}
+	
+	public void setShowSql(boolean showSql) {
+		this.showSql = showSql;
 	}
 	
 	public Connection getConnection() {
