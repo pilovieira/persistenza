@@ -1,24 +1,28 @@
 package br.com.pilovieira.persistenza.entity;
 
+import java.util.Date;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
 @Entity
-public class Dog implements Comparable<Dog> {
+public class Event {
 	
-	public static final String ATR_NAME = "name";
+	public static final String ATR_START = "start";
 	
 	@Id
 	int id;
-	@Column(name = ATR_NAME)
 	private String name;
+	@Column(name = ATR_START)
+	private Date start;
 	
-	public Dog() {}
+	public Event() {}
 	
-	public Dog(int id, String name) {
+	public Event(int id, String name, Date start) {
 		this.id = id;
 		this.name = name;
+		this.start = start;
 	}
 	
 	public int getId() {
@@ -36,10 +40,9 @@ public class Dog implements Comparable<Dog> {
 	public void setName(String name) {
 		this.name = name;
 	}
-
-	@Override
-	public int compareTo(Dog o) {
-		return new Integer(id).compareTo(new Integer(o.id));
+	
+	public Date getStart() {
+		return start;
 	}
-
+	
 }
