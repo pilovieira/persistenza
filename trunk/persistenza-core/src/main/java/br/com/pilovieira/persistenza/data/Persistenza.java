@@ -9,7 +9,6 @@ import org.hibernate.criterion.Restrictions;
 
 import com.google.common.base.Function;
 
-@SuppressWarnings("unchecked")
 public class Persistenza {
 	
 	private static SessionManager sessionManager = SessionManager.getInstance();
@@ -51,24 +50,20 @@ public class Persistenza {
 		return sessionManager.list(clazz, new Criterion[]{});
 	}
 	
-	public static <T> List<T> like(final Class<T> clazz, final String atributo, final String valor) {
-		return sessionManager.list(clazz, Restrictions.ilike(atributo, valor));
-	}
-
-	public static <T> List<T> likeString(Class<T> clazz, String atributo, String valor) {
-		return like(clazz, atributo, "%" + valor + "%");
+	public static <T> List<T> like(Class<T> clazz, String attribute, String value) {
+		return sessionManager.list(clazz, Restrictions.ilike(attribute, "%" + value + "%"));
 	}
 	
-	public static <T> List<T> search(Class<T> clazz, String atributo, Object valor) {
-		return search(clazz, PersistenzaRestrictions.eq(atributo, valor));
+	public static <T> List<T> search(Class<T> clazz, String attribute, Object value) {
+		return search(clazz, PersistenzaRestrictions.eq(attribute, value));
 	}
 	
 	public static <T> List<T> search(Class<T> clazz, Criterion... criterions) {
 		return sessionManager.list(clazz, criterions);
 	}
 
-	public static <T> List<T> between(final Class<T> clazz, final String atributo, final Date dataInicio, final Date dataFim) {
-		return sessionManager.list(clazz, Restrictions.between(atributo, dataInicio, dataFim));
+	public static <T> List<T> between(final Class<T> clazz, final String attribute, final Date lo, final Date hi) {
+		return sessionManager.list(clazz, Restrictions.between(attribute, lo, hi));
 	}
 
 	public static <T> T get(final Class<T> clazz, final int id) {
@@ -76,27 +71,26 @@ public class Persistenza {
 		return list.isEmpty() ? null : list.get(0);
 	}
 	
-	public static <T> T unique(final Class<T> clazz) {
+	public static <T> T singleton(final Class<T> clazz) {
 		return sessionManager.execute(new Function<Session, T>() {
 			@Override
 			public T apply(Session session) {
-				return (T) session.createCriteria(clazz).uniqueResult();
+				@SuppressWarnings("unchecked")
+				T instance = (T) session.createCriteria(clazz).uniqueResult();
+				
+				if (instance == null)
+					instance = newSingleton(clazz);
+				
+				return instance;
 			}
 		});
 	}
 
-	public static <T> T singleton(Class<T> clazz) {
-		T saved = unique(clazz);
-		
-		if (saved == null)
-			newSingleton(clazz);
-		
-		return unique(clazz);
-	}
-
-	private static <T> void newSingleton(Class<T> clazz) {
+	private static <T> T newSingleton(Class<T> clazz) {
 		try {
-			insert(clazz.newInstance());
+			T instance = clazz.newInstance();
+			insert(instance);
+			return instance;
 		} catch (InstantiationException | IllegalAccessException e) {
 			throw new RuntimeException("Exception creating new instance.", e);
 		}
