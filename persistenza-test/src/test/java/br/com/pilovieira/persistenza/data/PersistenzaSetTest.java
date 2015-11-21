@@ -17,7 +17,7 @@ import br.com.pilovieira.persistenza.entity.Dog;
 import br.com.pilovieira.persistenza.entity.Man;
 import br.com.pilovieira.persistenza.util.DatabaseSetup;
 
-public class PersistenzaTest {
+public class PersistenzaSetTest {
 	
 	@BeforeClass
 	public static void initialize() {
@@ -231,5 +231,5 @@ public class PersistenzaTest {
 		cats = Persistenza.all(Cat.class);
 		assertTrue("Dogs should be empty", cats.isEmpty());
 	}
-
+	
 }
