@@ -47,7 +47,7 @@ public class PersistenzaGetTest {
 
 	@Test
 	public void like() {
-		List<Dog> dogs = Persistenza.likeString(Dog.class, Dog.ATR_NAME, "D");
+		List<Dog> dogs = Persistenza.like(Dog.class, Dog.ATR_NAME, "D");
 		
 		assertEquals("Dogs size", 1, dogs.size());
 		Dog dog = dogs.get(0);
@@ -56,7 +56,7 @@ public class PersistenzaGetTest {
 	
 	@Test
 	public void likeMiddle() {
-		List<Dog> dogs = Persistenza.likeString(Dog.class, Dog.ATR_NAME, "o");
+		List<Dog> dogs = Persistenza.like(Dog.class, Dog.ATR_NAME, "o");
 		
 		assertEquals("Dogs size", 2, dogs.size());
 		sort(dogs);

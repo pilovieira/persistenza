@@ -1,7 +1,5 @@
 package br.com.pilovieira.persistenza.data;
 
-import java.util.LinkedHashSet;
-import java.util.LinkedList;
 import java.util.List;
 
 import org.hibernate.Criteria;
@@ -45,11 +43,12 @@ class SessionManager {
 		Session session = sessionFactory.openSession();
 
 		try {
-			Criteria criteria = session.createCriteria(clazz);
+			Criteria criteria = session.createCriteria(clazz).setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+
 			for (Criterion criterion : criterions)
 				criteria.add(criterion);
-			
-			return new LinkedList<T>(new LinkedHashSet<T>((List<T>) criteria.list()));
+
+			return (List<T>)criteria.list();
 		} finally {
 			session.close();
 		}
