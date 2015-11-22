@@ -1,20 +1,12 @@
 package br.com.pilovieira.persistenza.install;
 
-import static com.google.common.io.Closeables.closeQuietly;
 import static javax.swing.JFileChooser.APPROVE_OPTION;
 import static javax.swing.JOptionPane.showMessageDialog;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.lang.reflect.Constructor;
-import java.sql.Connection;
-import java.sql.Statement;
-import java.util.Arrays;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -189,6 +181,7 @@ public class ModuleInstallView extends JFrame {
 				Constructor<? extends Database> constructor = ((Class<? extends Database>)dropDatabases.getSelectedItem()).getConstructor(String.class, String.class, String.class);
 				Database database = constructor.newInstance(getUrl(), textUser.getText(), textPass.getText());
 				PersistenzaManager.setDatabase(database);
+				PersistenzaManager.load();
 			} catch (Exception e) {
 				throw new RuntimeException(e);
 			}
@@ -236,7 +229,7 @@ public class ModuleInstallView extends JFrame {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			try {
-				installScripts();
+				groupManager.installScripts();
 				showMessageDialog(ModuleInstallView.this, "Exportado com sucesso!");
 			} catch (Exception ex) {
 				showMessageDialog(ModuleInstallView.this, ex.getMessage());
@@ -244,56 +237,5 @@ public class ModuleInstallView extends JFrame {
 			}
 		}
 
-		private void installScripts() {
-			Map<ScriptGroup, List<Script>> installScripts = groupManager.getInstallScripts();
-			
-			for (ScriptGroup group : installScripts.keySet())
-				for (Script script : installScripts.get(group)) {
-					List<String> queries = getQueries(script);
-					executeQueries(queries);
-					groupManager.setLast(group, script);
-				}
-		}
-
-		private List<String> getQueries(Script script) {
-			InputStream scriptStream = script.getScriptStream();
-
-			InputStreamReader is = new InputStreamReader(scriptStream);
-			StringBuilder sb = new StringBuilder();
-			BufferedReader br = new BufferedReader(is);
-
-			try {
-				String read = br.readLine();
-				
-				while (read != null) {
-					sb.append(read);
-					read = br.readLine();
-				}
-			} catch (Exception e) {
-				throw new RuntimeException(e);
-			} finally {
-				closeQuietly(br);
-				closeQuietly(is);
-			}
-			
-			return Arrays.asList(sb.toString().split(";"));
-		}
-		
-		private void executeQueries(List<String> queries) {
-			try {
-				Connection connection = PersistenzaManager.getConnection();
-		        
-		        connection.setAutoCommit(false);
-		        Statement statement = connection.createStatement();
-
-		        for (String query : queries) 
-		        	statement.executeUpdate(query);
-		        
-		        connection.commit();
-		    } catch (Exception ex) {
-		        throw new RuntimeException(ex);
-		    }
-		}
-		
 	}
 }
