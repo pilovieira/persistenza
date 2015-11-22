@@ -6,10 +6,13 @@ import static javax.swing.JOptionPane.showMessageDialog;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.lang.reflect.Constructor;
+import java.util.Set;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -21,8 +24,16 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.border.TitledBorder;
 
 import net.miginfocom.swing.MigLayout;
+
+import org.reflections.Reflections;
+import org.reflections.scanners.SubTypesScanner;
+import org.reflections.scanners.TypeAnnotationsScanner;
+import org.reflections.serializers.JavaCodeSerializer;
+import org.reflections.util.ClasspathHelper;
+import org.reflections.util.ConfigurationBuilder;
+
+import br.com.pilovieira.persistenza.Database;
 import br.com.pilovieira.persistenza.PersistenzaManager;
-import br.com.pilovieira.persistenza.db.PostgreSql;
 
 public class EntityExporterView extends JFrame {
 
@@ -47,6 +58,8 @@ public class EntityExporterView extends JFrame {
 	private JLabel lblOptions;
 	private JPanel panelDbProperties;
 	private JPanel panelEntityExporter;
+	private JComboBox<Class<? extends Database>> dropDatabases;
+	private JLabel lblDatabase;
 
 	public static void main(String[] args) {
 		new EntityExporterView();
@@ -70,7 +83,7 @@ public class EntityExporterView extends JFrame {
 		panelDbProperties = new JPanel();
 		panelDbProperties.setBorder(new TitledBorder(null, "Database Properties", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		contentPane.add(panelDbProperties, "cell 0 0,grow");
-		panelDbProperties.setLayout(new MigLayout("", "[][grow]", "[][][][]"));
+		panelDbProperties.setLayout(new MigLayout("", "[][grow]", "[][][][][]"));
 		
 		lblUrl = new JLabel("URL:");
 		panelDbProperties.add(lblUrl, "flowy,cell 0 0,alignx right");
@@ -95,6 +108,24 @@ public class EntityExporterView extends JFrame {
 		
 		textOptions = new JTextField();
 		panelDbProperties.add(textOptions, "cell 1 3,growx");
+		
+		lblDatabase = new JLabel("DATABASE:");
+		panelDbProperties.add(lblDatabase, "cell 0 4,alignx trailing");
+		
+		dropDatabases = new JComboBox<Class<? extends Database>>();
+		panelDbProperties.add(dropDatabases, "cell 1 4,growx");
+		populateDatabases();
+	}
+
+	private void populateDatabases() {
+		ConfigurationBuilder config = new ConfigurationBuilder();
+		config.setUrls(ClasspathHelper.forClassLoader());
+		config.setScanners(new TypeAnnotationsScanner(), new SubTypesScanner());
+		config.setSerializer(new JavaCodeSerializer());
+		Reflections reflections = new Reflections(config);
+		Set<Class<? extends Database>> subtypes = reflections.getSubTypesOf(Database.class);
+		for (Class<? extends Database> dbClass : subtypes)
+			dropDatabases.addItem(dbClass);
 	}
 
 	private void createPanelEntityExporter() {
@@ -148,7 +179,14 @@ public class EntityExporterView extends JFrame {
 		}
 		
 		private void loadDatabase() {
-			PersistenzaManager.setDatabaseManager(new PostgreSql(getUrl(), textUser.getText(), textPass.getText()));
+			try {
+				@SuppressWarnings("unchecked")
+				Constructor<? extends Database> constructor = ((Class<? extends Database>)dropDatabases.getSelectedItem()).getConstructor(String.class, String.class, String.class);
+				Database database = constructor.newInstance(getUrl(), textUser.getText(), textPass.getText());
+				PersistenzaManager.setDatabase(database);
+			} catch (Exception e) {
+				throw new RuntimeException(e);
+			}
 		}
 
 		private String getUrl() {

@@ -19,6 +19,7 @@ public class ScriptLoader {
 	private static final String SCRIPT_EXTENSION = ".install";
 	
 	private Map<String, Set<Script>> scripts = new HashMap<String, Set<Script>>();
+	private ZipFile zipFile;
 
 	public Map<String, Set<Script>> load(File file) {
 		try {
@@ -38,7 +39,7 @@ public class ScriptLoader {
 	}
 
 	private void loadZipFile(File file) throws ZipException, IOException {
-		ZipFile zipFile = new ZipFile(file);
+		zipFile = new ZipFile(file);
 		Enumeration<? extends ZipEntry> entries = zipFile.entries();
 
 		while (entries.hasMoreElements()) {

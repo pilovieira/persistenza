@@ -25,15 +25,6 @@ public abstract class Database {
 		this.password = password;
 	}
 	
-	protected void loadProperties() {
-		setProperty(PROPERTY_SHOW_SQL, String.valueOf(showSql));
-		setProperty(PROPERTY_DIALECT, getDialect());
-		setProperty(PROPERTY_DRIVER_CLASS, getConnectionDriverClass());
-		setProperty(PROPERTY_CONNECTION_URL, url);
-		setProperty(PROPERTY_CONNECTION_USERNAME, username);
-		setProperty(PROPERTY_CONNECTION_PASSWORD, password);
-	}
-	
 	public void setShowSql(boolean showSql) {
 		this.showSql = showSql;
 	}
@@ -45,6 +36,15 @@ public abstract class Database {
 		} catch (Exception e) {
 			throw new RuntimeException("Connection not established", e);
 		}
+	}
+
+	protected void loadProperties() {
+		setProperty(PROPERTY_SHOW_SQL, String.valueOf(showSql));
+		setProperty(PROPERTY_DIALECT, getDialect());
+		setProperty(PROPERTY_DRIVER_CLASS, getConnectionDriverClass());
+		setProperty(PROPERTY_CONNECTION_URL, url);
+		setProperty(PROPERTY_CONNECTION_USERNAME, username);
+		setProperty(PROPERTY_CONNECTION_PASSWORD, password);
 	}
 
 	public abstract String getDialect();
