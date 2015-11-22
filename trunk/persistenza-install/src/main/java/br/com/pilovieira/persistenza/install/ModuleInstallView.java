@@ -10,6 +10,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.lang.reflect.Constructor;
 import java.sql.Connection;
 import java.sql.Statement;
 import java.util.Arrays;
@@ -19,6 +20,7 @@ import java.util.Set;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -31,8 +33,16 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.border.TitledBorder;
 
 import net.miginfocom.swing.MigLayout;
+
+import org.reflections.Reflections;
+import org.reflections.scanners.SubTypesScanner;
+import org.reflections.scanners.TypeAnnotationsScanner;
+import org.reflections.serializers.JavaCodeSerializer;
+import org.reflections.util.ClasspathHelper;
+import org.reflections.util.ConfigurationBuilder;
+
+import br.com.pilovieira.persistenza.Database;
 import br.com.pilovieira.persistenza.PersistenzaManager;
-import br.com.pilovieira.persistenza.db.PostgreSql;
 
 public class ModuleInstallView extends JFrame {
 
@@ -48,10 +58,12 @@ public class ModuleInstallView extends JFrame {
 	private JTextField textUser;
 	private JTextField textPass;
 	private JTextField textOptions;
+	private JComboBox<Class<? extends Database>> dropDatabases;
 	private JLabel lblUrl;
 	private JLabel lblUser;
 	private JLabel lblPass;
 	private JLabel lblOptions;
+	private JLabel lblDatabase;
 	private JPanel panelDbProperties;
 	private JPanel panelEntityExporter;
 	
@@ -84,7 +96,7 @@ public class ModuleInstallView extends JFrame {
 		lblUrl = new JLabel("URL:");
 		panelDbProperties.add(lblUrl, "flowy,cell 0 0,alignx right");
 		
-		textUrl = new JTextField("jdbc:postgresql://localhost:5432/Commerciale");
+		textUrl = new JTextField("jdbc:postgresql://localhost:5432/myDataBase");
 		panelDbProperties.add(textUrl, "cell 1 0,growx");
 		
 		lblUser = new JLabel("USER:");
@@ -105,6 +117,24 @@ public class ModuleInstallView extends JFrame {
 		
 		textOptions = new JTextField();
 		panelDbProperties.add(textOptions, "cell 1 3,growx");
+		
+		lblDatabase = new JLabel("DATABASE:");
+		panelDbProperties.add(lblDatabase, "cell 0 4,alignx trailing");
+		
+		dropDatabases = new JComboBox<Class<? extends Database>>();
+		panelDbProperties.add(dropDatabases, "cell 1 4,growx");
+		populateDatabases();
+	}
+	
+	private void populateDatabases() {
+		ConfigurationBuilder config = new ConfigurationBuilder();
+		config.setUrls(ClasspathHelper.forClassLoader());
+		config.setScanners(new TypeAnnotationsScanner(), new SubTypesScanner());
+		config.setSerializer(new JavaCodeSerializer());
+		Reflections reflections = new Reflections(config);
+		Set<Class<? extends Database>> subtypes = reflections.getSubTypesOf(Database.class);
+		for (Class<? extends Database> dbClass : subtypes)
+			dropDatabases.addItem(dbClass);
 	}
 
 	private void createPanelEntityExporter() {
@@ -154,8 +184,14 @@ public class ModuleInstallView extends JFrame {
 		}
 
 		private void loadDatabase() {
-			PersistenzaManager.setDatabaseManager(new PostgreSql(getUrl(), textUser.getText(), textPass.getText()));
-			PersistenzaManager.load();
+			try {
+				@SuppressWarnings("unchecked")
+				Constructor<? extends Database> constructor = ((Class<? extends Database>)dropDatabases.getSelectedItem()).getConstructor(String.class, String.class, String.class);
+				Database database = constructor.newInstance(getUrl(), textUser.getText(), textPass.getText());
+				PersistenzaManager.setDatabase(database);
+			} catch (Exception e) {
+				throw new RuntimeException(e);
+			}
 		}
 
 		private String getUrl() {

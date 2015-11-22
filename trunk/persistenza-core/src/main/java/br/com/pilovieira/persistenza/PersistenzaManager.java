@@ -10,7 +10,7 @@ public class PersistenzaManager {
 	private static SessionFactory factory;
 	private static Database database;
 	
-	public static void setDatabaseManager(Database database) {
+	public static void setDatabase(Database database) {
 		validate(database);
 		PersistenzaManager.database = database;
 		database.loadProperties();
