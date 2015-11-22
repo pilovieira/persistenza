@@ -9,7 +9,7 @@ import org.hibernate.criterion.Restrictions;
 
 import com.google.common.base.Function;
 
-public class Persistenza {
+public final class Persistenza {
 	
 	private static SessionManager sessionManager = SessionManager.getInstance();
 
