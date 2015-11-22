@@ -1,34 +1,34 @@
 package br.com.pilovieira.persistenza.install;
 
-import java.io.InputStream;
+import java.util.List;
 
 public class Script implements Comparable<Script> {
 	
 	private String group;
-	private Integer number;
-	private InputStream scriptStream;
+	private Integer sequence;
+	private List<String> queries;
 	
-	public Script(String group, int number, InputStream scriptStream) {
+	public Script(String group, int sequence, List<String> queries) {
 		this.group = group;
-		this.number = number;
-		this.scriptStream = scriptStream;
+		this.sequence = sequence;
+		this.queries = queries;
 	}
 	
 	public String getGroup() {
 		return group;
 	}
 	
-	public Integer getNumber() {
-		return number;
+	public Integer getSequence() {
+		return sequence;
 	}
 	
-	public InputStream getScriptStream() {
-		return scriptStream;
+	public List<String> getQueries() {
+		return queries;
 	}
 
 	@Override
 	public int compareTo(Script o) {
-		return number.compareTo(o.getNumber());
+		return sequence.compareTo(o.getSequence());
 	}
 	
 	@Override
@@ -38,12 +38,12 @@ public class Script implements Comparable<Script> {
 		
 		Script other = (Script) obj;
 		
-		return group.equals(other.getGroup()) && number.equals(other.number); 
+		return group.equals(other.getGroup()) && sequence.equals(other.sequence); 
 	}
 	
 	@Override
 	public int hashCode() {
-		return group.hashCode() * number.hashCode() * 31;
+		return group.hashCode() * sequence.hashCode() * 31;
 	}
 
 }
