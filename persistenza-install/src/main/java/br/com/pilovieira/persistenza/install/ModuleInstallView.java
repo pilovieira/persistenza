@@ -3,10 +3,15 @@ package br.com.pilovieira.persistenza.install;
 import static javax.swing.JFileChooser.APPROVE_OPTION;
 import static javax.swing.JOptionPane.showMessageDialog;
 
+import java.awt.Color;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.lang.reflect.Constructor;
+import java.sql.Connection;
+import java.sql.DatabaseMetaData;
+import java.sql.ResultSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -26,6 +31,8 @@ import javax.swing.border.TitledBorder;
 
 import net.miginfocom.swing.MigLayout;
 
+import org.hibernate.cfg.AnnotationConfiguration;
+import org.hibernate.tool.hbm2ddl.SchemaExport;
 import org.reflections.Reflections;
 import org.reflections.scanners.SubTypesScanner;
 import org.reflections.scanners.TypeAnnotationsScanner;
@@ -60,6 +67,9 @@ public class ModuleInstallView extends JFrame {
 	private JPanel panelEntityExporter;
 	
 	private ScriptGroupManager groupManager;
+	private JButton btnConnect;
+	private JLabel lblTool;
+	private JButton btnToolInstall;
 	
 	public static void main(String[] args) {
 		new ModuleInstallView();
@@ -83,7 +93,7 @@ public class ModuleInstallView extends JFrame {
 		panelDbProperties = new JPanel();
 		panelDbProperties.setBorder(new TitledBorder(null, "Database Properties", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		contentPane.add(panelDbProperties, "cell 0 0,grow");
-		panelDbProperties.setLayout(new MigLayout("", "[][grow]", "[][][][]"));
+		panelDbProperties.setLayout(new MigLayout("", "[][grow]", "[][][][][][]"));
 		
 		lblUrl = new JLabel("URL:");
 		panelDbProperties.add(lblUrl, "flowy,cell 0 0,alignx right");
@@ -115,6 +125,20 @@ public class ModuleInstallView extends JFrame {
 		
 		dropDatabases = new JComboBox<Class<? extends Database>>();
 		panelDbProperties.add(dropDatabases, "cell 1 4,growx");
+		
+		lblTool = new JLabel("NAO CONECTADO");
+		lblTool.setFont(new Font("Tahoma", Font.BOLD, 12));
+		lblTool.setForeground(Color.RED);
+		panelDbProperties.add(lblTool, "flowx,cell 1 5");
+		
+		btnToolInstall = new JButton("Instalar");
+		btnToolInstall.addActionListener(new ToolInstaller());
+		btnToolInstall.setVisible(false);
+		panelDbProperties.add(btnToolInstall, "cell 1 5,growx");
+		
+		btnConnect = new JButton("Conectar");
+		btnConnect.addActionListener(new DatabaseLoader());
+		panelDbProperties.add(btnConnect, "cell 1 5,alignx right");
 		populateDatabases();
 	}
 	
@@ -153,45 +177,61 @@ public class ModuleInstallView extends JFrame {
 		
 		panelEntityExporter.add(scroll, "cell 0 2,grow");
 		
-		btnInstall = new JButton("Instalar");
+		btnInstall = new JButton("Instalar Scripts");
 		panelEntityExporter.add(btnInstall, "cell 0 3,alignx right");
 		btnInstall.addActionListener(new Install());
+	}
+	
+	private class ToolInstaller implements ActionListener {
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			install();
+			refreshInstallerTool();
+		}
+
+		private void install() {
+			AnnotationConfiguration config = new AnnotationConfiguration();
+			config.addAnnotatedClass(ScriptGroup.class);
+			SchemaExport exporter = new SchemaExport(config);
+			exporter.create(true, true);
+		}
+	}
+	
+	private class DatabaseLoader implements ActionListener {
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			setDatabase();
+			refreshInstallerTool();
+		}
+		
+		private void setDatabase() {
+			try {
+				@SuppressWarnings("unchecked")
+				Constructor<? extends Database> constructor = ((Class<? extends Database>)dropDatabases.getSelectedItem()).getConstructor(String.class, String.class, String.class);
+				Database database = constructor.newInstance(getUrl(), textUser.getText(), textPass.getText());
+				PersistenzaManager.setDatabase(database);
+			} catch (Exception e) {
+				throw new RuntimeException(e);
+			}
+		}
+		
 	}
 	
 	private class ScriptLoaderListener implements ActionListener {
 
 		private static final String MSG_INVALID_FILE = "Você precisa escolher um arquivo .jar para exportar classes.";
 
-
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			try {
-				loadDatabase();
+				PersistenzaManager.load();
 				loadScripts();
 				countScripts();
 			} catch (Exception ex) {
 				showMessageDialog(ModuleInstallView.this, ex.getMessage());
 				ex.printStackTrace();
 			}
-		}
-
-		private void loadDatabase() {
-			try {
-				@SuppressWarnings("unchecked")
-				Constructor<? extends Database> constructor = ((Class<? extends Database>)dropDatabases.getSelectedItem()).getConstructor(String.class, String.class, String.class);
-				Database database = constructor.newInstance(getUrl(), textUser.getText(), textPass.getText());
-				PersistenzaManager.setDatabase(database);
-				PersistenzaManager.load();
-			} catch (Exception e) {
-				throw new RuntimeException(e);
-			}
-		}
-
-		private String getUrl() {
-			String url = textUrl.getText();
-			if (!textOptions.getText().isEmpty())
-				url += "?" + textOptions.getText();
-			return url;
 		}
 
 		private void loadScripts() {
@@ -237,5 +277,27 @@ public class ModuleInstallView extends JFrame {
 			}
 		}
 
+	}
+	
+	private String getUrl() {
+		String url = textUrl.getText();
+		if (!textOptions.getText().isEmpty())
+			url += "?" + textOptions.getText();
+		return url;
+	}
+	
+	private void refreshInstallerTool() {
+		try {
+			Connection c = PersistenzaManager.getConnection();
+			DatabaseMetaData dbm = c.getMetaData();  
+			ResultSet rs = dbm.getTables(null, null, ScriptGroup.class.getSimpleName().toLowerCase(), null);
+			boolean installed = rs.next();
+			
+			btnToolInstall.setVisible(!installed);
+			lblTool.setText(installed ? "CONECTADO E INSTALADO" : "CONECTADO E NAO INSTALADO");
+			lblTool.setForeground(installed ? Color.BLUE : Color.RED);
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
 	}
 }
