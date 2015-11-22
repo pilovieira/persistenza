@@ -32,7 +32,6 @@ import javax.swing.border.TitledBorder;
 
 import net.miginfocom.swing.MigLayout;
 import br.com.pilovieira.persistenza.PersistenzaManager;
-import br.com.pilovieira.persistenza.db.ConnectionData;
 import br.com.pilovieira.persistenza.db.PostgreSql;
 
 public class ModuleInstallView extends JFrame {
@@ -155,8 +154,7 @@ public class ModuleInstallView extends JFrame {
 		}
 
 		private void loadDatabase() {
-			ConnectionData connectionData = new ConnectionData(getUrl(), textUser.getText(), textPass.getText());
-			PersistenzaManager.setDatabaseManager(new PostgreSql(connectionData));
+			PersistenzaManager.setDatabaseManager(new PostgreSql(getUrl(), textUser.getText(), textPass.getText()));
 			PersistenzaManager.load();
 		}
 

@@ -9,7 +9,6 @@ import java.sql.Statement;
 import org.reflections.util.ClasspathHelper;
 
 import br.com.pilovieira.persistenza.PersistenzaManager;
-import br.com.pilovieira.persistenza.db.ConnectionData;
 import br.com.pilovieira.persistenza.db.HyperSql;
 
 @SuppressWarnings("rawtypes")
@@ -22,7 +21,7 @@ public class DatabaseSetup {
 		classLoader.addUrls(entities);
 		Thread.currentThread().setContextClassLoader(classLoader);
 		
-		HyperSql hyperSql = new HyperSql(new ConnectionData("jdbc:hsqldb:mem:.", "sa", ""));
+		HyperSql hyperSql = new HyperSql("jdbc:hsqldb:mem:.", "sa", "");
 		hyperSql.setShowSql(true);
 		
 		PersistenzaManager.setDatabaseManager(hyperSql);

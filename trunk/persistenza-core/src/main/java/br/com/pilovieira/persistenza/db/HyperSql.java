@@ -1,9 +1,11 @@
 package br.com.pilovieira.persistenza.db;
 
-public final class HyperSql extends DatabaseManager {
+import br.com.pilovieira.persistenza.Database;
 
-	public HyperSql(ConnectionData connectionData) {
-		super(connectionData);
+public final class HyperSql extends Database {
+
+	public HyperSql(String url, String username, String password) {
+		super(url, username, password);
 	}
 
 	@Override

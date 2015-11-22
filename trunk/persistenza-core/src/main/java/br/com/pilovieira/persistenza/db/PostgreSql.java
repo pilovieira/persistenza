@@ -1,9 +1,11 @@
 package br.com.pilovieira.persistenza.db;
 
-public final class PostgreSql extends DatabaseManager {
+import br.com.pilovieira.persistenza.Database;
 
-	public PostgreSql(ConnectionData connectionData) {
-		super(connectionData);
+public final class PostgreSql extends Database {
+
+	public PostgreSql(String url, String username, String password) {
+		super(url, username, password);
 	}
 
 	@Override
