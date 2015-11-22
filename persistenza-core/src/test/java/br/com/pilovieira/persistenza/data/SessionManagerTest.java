@@ -109,12 +109,14 @@ public class SessionManagerTest {
 	@Test
 	public void listObjects() {
 		when(session.createCriteria(Class.class)).thenReturn(criteria);
+		when(criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY)).thenReturn(criteria);
 		
 		subject.list(Class.class, criterion);
 		
 		InOrder order = inOrder(sessionFactory, session, criteria);
 		order.verify(sessionFactory).openSession();
 		order.verify(session).createCriteria(Class.class);
+		order.verify(criteria).setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
 		order.verify(criteria).add(criterion);
 		order.verify(criteria).list();
 		order.verify(session).close();
@@ -123,6 +125,7 @@ public class SessionManagerTest {
 	@Test
 	public void closeSessionWhenThrowExceptionInList() {
 		when(session.createCriteria(Class.class)).thenReturn(criteria);
+		when(criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY)).thenReturn(criteria);
 		doThrow(HibernateException.class).when(criteria).list();
 		
 		try {
@@ -135,6 +138,7 @@ public class SessionManagerTest {
 		InOrder order = inOrder(sessionFactory, session, criteria);
 		order.verify(sessionFactory).openSession();
 		order.verify(session).createCriteria(Class.class);
+		order.verify(criteria).setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
 		order.verify(criteria).add(criterion);
 		order.verify(criteria).list();
 		order.verify(session).close();

@@ -3,35 +3,36 @@ package br.com.pilovieira.persistenza;
 import java.sql.Connection;
 
 import org.hibernate.SessionFactory;
-
-import br.com.pilovieira.persistenza.db.DatabaseManager;
+import org.hibernate.cfg.AnnotationConfiguration;
 
 public class PersistenzaManager {
 	
 	private static SessionFactory factory;
-	private static DatabaseManager database;
+	private static Database database;
 	
-	public static void setDatabaseManager(DatabaseManager databaseManager) {
-		validateDatabaseManager(databaseManager);
-		database = databaseManager;
+	public static void setDatabaseManager(Database database) {
+		validate(database);
+		PersistenzaManager.database = database;
 		database.loadProperties();
 	}
 	
 	public static void load() {
+		validate(database);
 		loadEntities();
 	}
 	
 	private static void loadEntities() {
-		SessionFactoryBuilder sessionFactoryBuilder = new SessionFactoryBuilder();
-		factory = sessionFactoryBuilder.build();
+		AnnotationConfiguration config = new AnnotationConfiguration();
+		new EntityLoader(config).load();
+		factory = config.buildSessionFactory();
 	}
 	
 	public static Connection getConnection() {
-		validateDatabaseManager(database);
+		validate(database);
 		return database.getConnection();
 	}
 
-	private static void validateDatabaseManager(DatabaseManager databaseManager) {
+	private static void validate(Database databaseManager) {
 		if (databaseManager == null)
 			throw new RuntimeException("Database not loaded.");
 	}
