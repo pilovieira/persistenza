@@ -13,23 +13,12 @@ public final class Persistenza {
 	
 	private static SessionManager sessionManager = SessionManager.getInstance();
 
-	public static void insert(final Object... entities) {
+	public static void persist(final Object... entities) {
 		sessionManager.commit(new Function<Session, Void>() {
 			@Override
 			public Void apply(Session session) {
 				for (Object entity : entities)
-					session.save(entity);
-				return null;
-			}
-		});
-	}
-
-	public static void update(final Object... entities) {
-		sessionManager.commit(new Function<Session, Void>() {
-			@Override
-			public Void apply(Session session) {
-				for (Object entity : entities)
-					session.update(entity);
+					session.saveOrUpdate(entity);
 				return null;
 			}
 		});
@@ -45,7 +34,7 @@ public final class Persistenza {
 			}
 		});
 	}
-
+	
 	public static <T> List<T> all(final Class<T> clazz) {
 		return sessionManager.list(clazz, new Criterion[]{});
 	}
@@ -89,7 +78,7 @@ public final class Persistenza {
 	private static <T> T newSingleton(Class<T> clazz) {
 		try {
 			T instance = clazz.newInstance();
-			insert(instance);
+			persist(instance);
 			return instance;
 		} catch (InstantiationException | IllegalAccessException e) {
 			throw new RuntimeException("Exception creating new instance.", e);

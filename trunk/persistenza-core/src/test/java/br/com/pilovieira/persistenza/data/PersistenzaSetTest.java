@@ -30,8 +30,8 @@ public class PersistenzaSetTest {
 	}
 	
 	@Test
-	public void insertEntity() {
-		Persistenza.insert(new Dog(1, "Doge"));
+	public void persistEntity() {
+		Persistenza.persist(new Dog(1, "Doge"));
 		
 		List<Dog> dogs = Persistenza.all(Dog.class);
 
@@ -43,7 +43,7 @@ public class PersistenzaSetTest {
 
 	@Test
 	public void updateEntity() {
-		Persistenza.insert(new Dog(1, "Doge"));
+		Persistenza.persist(new Dog(1, "Doge"));
 		
 		List<Dog> dogs = Persistenza.all(Dog.class);
 		
@@ -51,7 +51,7 @@ public class PersistenzaSetTest {
 		
 		Dog savedDog = dogs.get(0);
 		savedDog.setName("HueHue BRBR");
-		Persistenza.update(savedDog);
+		Persistenza.persist(savedDog);
 		
 		dogs = Persistenza.all(Dog.class);
 		
@@ -60,7 +60,7 @@ public class PersistenzaSetTest {
 
 	@Test
 	public void deleteEntity() {
-		Persistenza.insert(new Dog(1, "Doge"));
+		Persistenza.persist(new Dog(1, "Doge"));
 		
 		List<Dog> dogs = Persistenza.all(Dog.class);
 		
@@ -75,8 +75,8 @@ public class PersistenzaSetTest {
 	}
 	
 	@Test
-	public void insertMultipleEntities() {
-		Persistenza.insert(new Dog(1, "Doge"), new Dog(2, "Wow"));
+	public void persistMultipleEntities() {
+		Persistenza.persist(new Dog(1, "Doge"), new Dog(2, "Wow"));
 		
 		List<Dog> dogs = Persistenza.all(Dog.class);
 
@@ -86,8 +86,8 @@ public class PersistenzaSetTest {
 	}
 
 	@Test
-	public void insertMultipleEntitiesDifferentTypes() {
-		Persistenza.insert(new Dog(1, "Doge"), new Cat(2, "Bart"));
+	public void persistMultipleEntitiesDifferentTypes() {
+		Persistenza.persist(new Dog(1, "Doge"), new Cat(2, "Bart"));
 		
 		List<Dog> dogs = Persistenza.all(Dog.class);
 		
@@ -99,10 +99,10 @@ public class PersistenzaSetTest {
 	}
 
 	@Test
-	public void insertMultipleRelatedEntities() {
+	public void persistMultipleRelatedEntities() {
 		Dog dog = new Dog(1, "Doge");
 		Man man = new Man(2, "Derp", dog);
-		Persistenza.insert(man, dog);
+		Persistenza.persist(man, dog);
 		
 		List<Dog> dogs = Persistenza.all(Dog.class);
 		
@@ -119,7 +119,7 @@ public class PersistenzaSetTest {
 	
 	@Test
 	public void updateMultipleEntitiesDifferentTypes() {
-		Persistenza.insert(new Dog(1, "Doge"), new Cat(2, "Bart"));
+		Persistenza.persist(new Dog(1, "Doge"), new Cat(2, "Bart"));
 		
 		List<Dog> dogs = Persistenza.all(Dog.class);
 		assertEquals("Dogs size", 1, dogs.size());
@@ -134,7 +134,7 @@ public class PersistenzaSetTest {
 		dog.setName("Wow");
 		cat.setName("Garf");
 		
-		Persistenza.update(dog, cat);
+		Persistenza.persist(dog, cat);
 		
 		dogs = Persistenza.all(Dog.class);
 		assertEquals("Dogs size", 1, dogs.size());
@@ -151,7 +151,7 @@ public class PersistenzaSetTest {
 	public void updateMultipleRelatedEntities() {
 		Dog dog = new Dog(1, "Doge");
 		Man man = new Man(2, "Derp", dog);
-		Persistenza.insert(man, dog);
+		Persistenza.persist(man, dog);
 		
 		List<Dog> dogs = Persistenza.all(Dog.class);
 		assertEquals("Dogs size", 1, dogs.size());
@@ -166,7 +166,7 @@ public class PersistenzaSetTest {
 		dog.setName("Wow");
 		man.setName("Gusto");
 		
-		Persistenza.update(dog, man);
+		Persistenza.persist(dog, man);
 		
 		dogs = Persistenza.all(Dog.class);
 		assertEquals("Dogs size", 1, dogs.size());
@@ -183,7 +183,7 @@ public class PersistenzaSetTest {
 	public void updateMultipleUnlinkEntites() {
 		Dog dog = new Dog(1, "Doge");
 		Man man = new Man(2, "Derp", dog);
-		Persistenza.insert(man, dog);
+		Persistenza.persist(man, dog);
 		
 		List<Dog> dogs = Persistenza.all(Dog.class);
 		assertEquals("Dogs size", 1, dogs.size());
@@ -199,7 +199,7 @@ public class PersistenzaSetTest {
 		
 		man.setFriend(null);
 		
-		Persistenza.update(man);
+		Persistenza.persist(man);
 		
 		dogs = Persistenza.all(Dog.class);
 		assertEquals("Dogs size", 1, dogs.size());
@@ -210,8 +210,33 @@ public class PersistenzaSetTest {
 	}
 	
 	@Test
+	public void updateEntityWithNewEntity() {
+		Persistenza.persist(new Dog(1, "Doge"));
+		
+		List<Dog> dogs = Persistenza.all(Dog.class);
+		assertEquals("Dogs size", 1, dogs.size());
+		Dog dog = dogs.get(0);
+		assertEquals("Dog name", "Doge", dog.getName());
+
+		dog.setName("Wow");
+		Cat cat = new Cat(2, "Bart");
+		
+		Persistenza.persist(dog, cat);
+		
+		dogs = Persistenza.all(Dog.class);
+		assertEquals("Dogs size", 1, dogs.size());
+		dog = dogs.get(0);
+		assertEquals("Dog name", "Wow", dog.getName());
+		
+		List<Cat> cats = Persistenza.all(Cat.class);
+		assertEquals("Cats size", 1, cats.size());
+		cat = cats.get(0);
+		assertEquals("Cat name", "Bart", cat.getName());
+	}
+	
+	@Test
 	public void deleteMultipleEntitiesDifferentTypes() {
-		Persistenza.insert(new Dog(1, "Doge"), new Cat(2, "Bart"));
+		Persistenza.persist(new Dog(1, "Doge"), new Cat(2, "Bart"));
 		
 		List<Dog> dogs = Persistenza.all(Dog.class);
 		assertEquals("Dogs size", 1, dogs.size());
