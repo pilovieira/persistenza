@@ -24,7 +24,7 @@ public class ScriptGroupManager {
 	public void refreshGroups() {
 		for (String groupName : scripts.keySet())
 			if (Persistenza.search(ScriptGroup.class, ScriptGroup.NAME, groupName).isEmpty())
-				Persistenza.insert(new ScriptGroup(groupName));
+				Persistenza.persist(new ScriptGroup(groupName));
 	}
 	
 	public List<String> countScripts() {
@@ -98,7 +98,7 @@ public class ScriptGroupManager {
 
 	private void setLast(ScriptGroup group, Script script) {
 		group.setLast(script.getSequence());
-		Persistenza.update(group);
+		Persistenza.persist(group);
 	}
 
 }

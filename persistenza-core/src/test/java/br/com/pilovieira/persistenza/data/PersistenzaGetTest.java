@@ -77,7 +77,7 @@ public class PersistenzaGetTest {
 
 	@Test
 	public void searchNullAttribute() {
-		Persistenza.insert(new Dog(4, null));
+		Persistenza.persist(new Dog(4, null));
 		
 		List<Dog> dogs = Persistenza.search(Dog.class, Dog.ATR_NAME, null);
 		
@@ -93,7 +93,7 @@ public class PersistenzaGetTest {
 		calendar.set(MONTH, NOVEMBER);
 		calendar.set(YEAR, 2015);
 		
-		Persistenza.insert(new Event(4, "Dojo", calendar.getTime()));
+		Persistenza.persist(new Event(4, "Dojo", calendar.getTime()));
 		
 		Calendar lo = (Calendar)calendar.clone();
 		lo.set(DAY_OF_MONTH, 18);
@@ -134,7 +134,7 @@ public class PersistenzaGetTest {
 
 	@Test
 	public void singletonExistent() {
-		Persistenza.insert(new Config());
+		Persistenza.persist(new Config());
 		
 		Config config = Persistenza.singleton(Config.class);
 		

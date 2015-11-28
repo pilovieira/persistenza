@@ -7,7 +7,7 @@ public class Support {
 
 	public static void createDogs(String... names) {
 		for (int i = 0; i < names.length ; i++)
-			Persistenza.insert(new Dog(i + 1, names[i]));
+			Persistenza.persist(new Dog(i + 1, names[i]));
 	}
 	
 }
