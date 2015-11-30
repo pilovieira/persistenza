@@ -51,7 +51,6 @@ public class EntityExporterView extends JFrame {
 	private JTextField textUrl;
 	private JTextField textUser;
 	private JTextField textPass;
-	private JTextField textOptions;
 	private JLabel lblUrl;
 	private JLabel lblUser;
 	private JLabel lblPass;
@@ -60,6 +59,7 @@ public class EntityExporterView extends JFrame {
 	private JPanel panelEntityExporter;
 	private JComboBox<Class<? extends Database>> dropDatabases;
 	private JLabel lblDatabase;
+	private JCheckBox chkSsl;
 
 	public static void main(String[] args) {
 		new EntityExporterView();
@@ -106,14 +106,14 @@ public class EntityExporterView extends JFrame {
 		lblOptions = new JLabel("OPTIONS:");
 		panelDbProperties.add(lblOptions, "cell 0 3,alignx right");
 		
-		textOptions = new JTextField();
-		panelDbProperties.add(textOptions, "cell 1 3,growx");
-		
 		lblDatabase = new JLabel("DATABASE:");
 		panelDbProperties.add(lblDatabase, "cell 0 4,alignx trailing");
 		
 		dropDatabases = new JComboBox<Class<? extends Database>>();
 		panelDbProperties.add(dropDatabases, "cell 1 4,growx");
+		
+		chkSsl = new JCheckBox("SSL");
+		panelDbProperties.add(chkSsl, "cell 1 3");
 		populateDatabases();
 	}
 
@@ -182,19 +182,13 @@ public class EntityExporterView extends JFrame {
 			try {
 				@SuppressWarnings("unchecked")
 				Constructor<? extends Database> constructor = ((Class<? extends Database>)dropDatabases.getSelectedItem()).getConstructor(String.class, String.class, String.class);
-				Database database = constructor.newInstance(getUrl(), textUser.getText(), textPass.getText());
+				Database database = constructor.newInstance(textUrl.getText(), textUser.getText(), textPass.getText());
+				database.setSsl(chkSsl.isSelected());
 				PersistenzaManager.setDatabase(database);
 				PersistenzaManager.load();
 			} catch (Exception e) {
 				throw new RuntimeException(e);
 			}
-		}
-
-		private String getUrl() {
-			String url = textUrl.getText();
-			if (!textOptions.getText().isEmpty())
-				url += "?" + textOptions.getText();
-			return url;
 		}
 
 		private void loadEntities() {

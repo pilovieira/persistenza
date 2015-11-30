@@ -42,6 +42,7 @@ import org.reflections.util.ConfigurationBuilder;
 
 import br.com.pilovieira.persistenza.Database;
 import br.com.pilovieira.persistenza.PersistenzaManager;
+import javax.swing.JCheckBox;
 
 public class ModuleInstallView extends JFrame {
 
@@ -56,7 +57,6 @@ public class ModuleInstallView extends JFrame {
 	private JTextField textUrl;
 	private JTextField textUser;
 	private JTextField textPass;
-	private JTextField textOptions;
 	private JComboBox<Class<? extends Database>> dropDatabases;
 	private JLabel lblUrl;
 	private JLabel lblUser;
@@ -70,6 +70,7 @@ public class ModuleInstallView extends JFrame {
 	private JButton btnConnect;
 	private JLabel lblTool;
 	private JButton btnToolInstall;
+	private JCheckBox chkSsl;
 	
 	public static void main(String[] args) {
 		new ModuleInstallView();
@@ -117,9 +118,6 @@ public class ModuleInstallView extends JFrame {
 		lblOptions = new JLabel("OPTIONS:");
 		panelDbProperties.add(lblOptions, "cell 0 3,alignx right");
 		
-		textOptions = new JTextField();
-		panelDbProperties.add(textOptions, "cell 1 3,growx");
-		
 		lblDatabase = new JLabel("DATABASE:");
 		panelDbProperties.add(lblDatabase, "cell 0 4,alignx trailing");
 		
@@ -139,6 +137,9 @@ public class ModuleInstallView extends JFrame {
 		btnConnect = new JButton("Conectar");
 		btnConnect.addActionListener(new DatabaseLoader());
 		panelDbProperties.add(btnConnect, "cell 1 5,alignx right");
+		
+		chkSsl = new JCheckBox("SSL");
+		panelDbProperties.add(chkSsl, "cell 1 3");
 		populateDatabases();
 	}
 	
@@ -209,13 +210,13 @@ public class ModuleInstallView extends JFrame {
 			try {
 				@SuppressWarnings("unchecked")
 				Constructor<? extends Database> constructor = ((Class<? extends Database>)dropDatabases.getSelectedItem()).getConstructor(String.class, String.class, String.class);
-				Database database = constructor.newInstance(getUrl(), textUser.getText(), textPass.getText());
+				Database database = constructor.newInstance(textUrl.getText(), textUser.getText(), textPass.getText());
+				database.setSsl(chkSsl.isSelected());
 				PersistenzaManager.setDatabase(database);
 			} catch (Exception e) {
 				throw new RuntimeException(e);
 			}
 		}
-		
 	}
 	
 	private class ScriptLoaderListener implements ActionListener {
@@ -277,13 +278,6 @@ public class ModuleInstallView extends JFrame {
 			}
 		}
 
-	}
-	
-	private String getUrl() {
-		String url = textUrl.getText();
-		if (!textOptions.getText().isEmpty())
-			url += "?" + textOptions.getText();
-		return url;
 	}
 	
 	private void refreshInstallerTool() {
