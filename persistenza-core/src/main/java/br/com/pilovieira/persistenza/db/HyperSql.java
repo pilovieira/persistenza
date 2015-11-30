@@ -9,12 +9,17 @@ public final class HyperSql extends Database {
 	}
 
 	@Override
-	public String getDialect() {
+	protected String getDialect() {
 		return "org.hibernate.dialect.HSQLDialect";
 	}
 
 	@Override
-	public String getConnectionDriverClass() {
+	protected String getConnectionDriverClass() {
 		return "org.hsqldb.jdbcDriver";
+	}
+
+	@Override
+	protected String getSslFactory() {
+		return null;
 	}
 }

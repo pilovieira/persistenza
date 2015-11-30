@@ -9,12 +9,17 @@ public final class PostgreSql extends Database {
 	}
 
 	@Override
-	public String getDialect() {
+	protected String getDialect() {
 		return "org.hibernate.dialect.PostgreSQLDialect";
 	}
 
 	@Override
-	public String getConnectionDriverClass() {
+	protected String getConnectionDriverClass() {
 		return "org.postgresql.Driver";
+	}
+
+	@Override
+	protected String getSslFactory() {
+		return "org.postgresql.ssl.NonValidatingFactory";
 	}
 }
