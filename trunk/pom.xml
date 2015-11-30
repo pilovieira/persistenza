@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>br.com.pilovieira.persistenza</groupId>
 	<artifactId>persistenza</artifactId>
-	<version>3.3-SNAPSHOT</version>
+	<version>3.3</version>
 	<name>Persistenza</name>
 	<description>Camada de fácil acesso a bd.</description>
 	<packaging>pom</packaging>
@@ -133,9 +133,9 @@
 	</build>
 
 	<scm>
-		<url>https://subversion.assembla.com/svn/lockTracker.persistenza/trunk</url>
-		<connection>scm:svn:https://subversion.assembla.com/svn/lockTracker.persistenza/trunk</connection>
-		<developerConnection>scm:svn:https://subversion.assembla.com/svn/lockTracker.persistenza/trunk</developerConnection>
+		<url>https://subversion.assembla.com/svn/lockTracker.persistenza/tags/persistenza-3.3</url>
+		<connection>scm:svn:https://subversion.assembla.com/svn/lockTracker.persistenza/tags/persistenza-3.3</connection>
+		<developerConnection>scm:svn:https://subversion.assembla.com/svn/lockTracker.persistenza/tags/persistenza-3.3</developerConnection>
 	</scm>
 
 	<distributionManagement>
