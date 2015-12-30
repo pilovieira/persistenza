@@ -8,23 +8,13 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Criterion;
 
-import br.com.pilovieira.persistenza.PersistenzaManager;
-
 import com.google.common.base.Function;
 
 class SessionManager {
 	
 	private SessionFactory sessionFactory;
 
-	protected static SessionManager instance;
-	
-	public static SessionManager getInstance() {
-		if (instance == null)
-			instance = new SessionManager(PersistenzaManager.getFactory());
-		return instance;
-	}
-	
-	SessionManager(SessionFactory sessionFactory) {
+	public SessionManager(SessionFactory sessionFactory) {
 		this.sessionFactory = sessionFactory;
 	}
 	

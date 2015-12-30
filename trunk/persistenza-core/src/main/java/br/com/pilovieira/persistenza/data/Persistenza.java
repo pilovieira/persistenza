@@ -7,32 +7,37 @@ import org.hibernate.Session;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Restrictions;
 
+import br.com.pilovieira.persistenza.PersistenzaManager;
+
 import com.google.common.base.Function;
 
 public final class Persistenza {
 	
-	private static SessionManager sessionManager = SessionManager.getInstance();
-
-	public static void persist(final Object... entities) {
-		sessionManager.commit(new Function<Session, Void>() {
-			@Override
-			public Void apply(Session session) {
-				for (Object entity : entities)
-					session.saveOrUpdate(entity);
-				return null;
-			}
-		});
+	private static PersistStrategyManager strategy = PersistStrategyManager.INSTANCE;
+	private static SessionManager sessionManager = new SessionManager(PersistenzaManager.getFactory());
+	
+	public static void buff() {
+		strategy.buff(true);
+	}
+	
+	public static void yolo() {
+		try {
+			strategy.get().apply();
+		} finally {
+			nope();
+		}
 	}
 
+	public static void nope() {
+		strategy.buff(false);
+	}
+	
+	public static void persist(final Object... entities) {
+		strategy.get().persist(entities);
+	}
+	
 	public static void delete(final Object... entities) {
-		sessionManager.commit(new Function<Session, Void>() {
-			@Override
-			public Void apply(Session session) {
-				for (Object entity : entities)
-					session.delete(entity);
-				return null;
-			}
-		});
+		strategy.get().delete(entities);
 	}
 	
 	public static <T> List<T> all(final Class<T> clazz) {
