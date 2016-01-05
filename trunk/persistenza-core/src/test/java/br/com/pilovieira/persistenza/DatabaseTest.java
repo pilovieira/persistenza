@@ -5,6 +5,8 @@ import static junit.framework.Assert.assertNull;
 
 import java.util.Properties;
 
+import junit.framework.Assert;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -14,7 +16,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 import br.com.pilovieira.persistenza.db.PostgreSql;
 
 @RunWith(MockitoJUnitRunner.class)
-public class PostgreSqlTest {
+public class DatabaseTest {
 	
 	private static final String PROPERTY_DIALECT = "hibernate.dialect";
 	private static final String PROPERTY_DRIVER_CLASS = "hibernate.connection.driver_class";
@@ -68,6 +70,11 @@ public class PostgreSqlTest {
 		subject.loadProperties();
 		
 		assertEquals("Property Pass", System.getProperty(PROPERTY_SHOW_SQL), "true");
+	}
+	
+	@Test
+	public void withSsl() {
+		Assert.fail();
 	}
 	
 }
