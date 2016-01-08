@@ -16,19 +16,19 @@ public final class Persistenza {
 	private static PersistStrategyManager strategy = PersistStrategyManager.INSTANCE;
 	private static SessionManager sessionManager = new SessionManager(PersistenzaManager.getFactory());
 	
-	public static void buff() {
+	public static void pause() {
 		strategy.buff(true);
 	}
 	
-	public static void yolo() {
+	public static void play() {
 		try {
 			strategy.get().apply();
 		} finally {
-			nope();
+			strategy.buff(false);
 		}
 	}
 
-	public static void nope() {
+	public static void rewind() {
 		strategy.buff(false);
 	}
 	

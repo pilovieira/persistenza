@@ -1,4 +1,4 @@
-package br.com.pilovieira.persistenza.export;
+package br.com.pilovieira.persistenza;
 
 import java.io.File;
 import java.net.MalformedURLException;

@@ -12,7 +12,7 @@ import org.reflections.serializers.JavaCodeSerializer;
 import org.reflections.util.ClasspathHelper;
 import org.reflections.util.ConfigurationBuilder;
 
-public class EntityLoader {
+class EntityLoader {
 	
 	private AnnotationConfiguration config;
 	

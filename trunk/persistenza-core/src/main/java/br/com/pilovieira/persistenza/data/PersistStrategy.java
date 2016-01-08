@@ -3,7 +3,7 @@ package br.com.pilovieira.persistenza.data;
 import br.com.pilovieira.persistenza.PersistenzaManager;
 
 
-public abstract class PersistStrategy {
+abstract class PersistStrategy {
 	
 	protected SessionManager sessionManager = new SessionManager(PersistenzaManager.getFactory());
 	

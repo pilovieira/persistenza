@@ -2,7 +2,7 @@ package br.com.pilovieira.persistenza.db;
 
 import br.com.pilovieira.persistenza.Database;
 
-public final class HyperSql extends Database {
+public class HyperSql extends Database {
 
 	public HyperSql(String url, String username, String password) {
 		super(url, username, password);

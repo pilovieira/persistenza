@@ -1,4 +1,4 @@
-package br.com.pilovieira.persistenza.export;
+package br.com.pilovieira.persistenza;
 
 import java.util.ArrayList;
 import java.util.Collections;

@@ -9,7 +9,7 @@ import org.hibernate.Session;
 
 import com.google.common.base.Function;
 
-public class Buffer extends PersistStrategy {
+class Buffer extends PersistStrategy {
 	
 	private List<Object> persistEntities = new LinkedList<>();
 	private List<Object> deleteEntities = new LinkedList<>();

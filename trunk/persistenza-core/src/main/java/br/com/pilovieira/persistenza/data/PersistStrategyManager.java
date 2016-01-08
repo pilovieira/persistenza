@@ -1,7 +1,7 @@
 package br.com.pilovieira.persistenza.data;
 
 
-public class PersistStrategyManager {
+class PersistStrategyManager {
 	
 	public static final PersistStrategyManager INSTANCE = new PersistStrategyManager();
 	

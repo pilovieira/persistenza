@@ -2,7 +2,7 @@ package br.com.pilovieira.persistenza.db;
 
 import br.com.pilovieira.persistenza.Database;
 
-public final class PostgreSql extends Database {
+public class PostgreSql extends Database {
 
 	public PostgreSql(String url, String username, String password) {
 		super(url, username, password);
