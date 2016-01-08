@@ -5,15 +5,11 @@ import static junit.framework.Assert.assertNull;
 
 import java.util.Properties;
 
-import junit.framework.Assert;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.runners.MockitoJUnitRunner;
-
-import br.com.pilovieira.persistenza.db.PostgreSql;
 
 @RunWith(MockitoJUnitRunner.class)
 public class DatabaseTest {
@@ -30,14 +26,14 @@ public class DatabaseTest {
 	private static final String PASS_VALUE = "pass";
 
 	private Properties properties;
-	private PostgreSql subject;
+	private DatabaseFake subject;
 
 	@Before
 	public void setup() {
 		properties = System.getProperties();
 		System.setProperties(new Properties());
 		
-		subject = new PostgreSql(URL_VALUE, USER_VALUE, PASS_VALUE);
+		subject = new DatabaseFake(URL_VALUE, USER_VALUE, PASS_VALUE);
 	}
 	
 	@After
@@ -55,8 +51,8 @@ public class DatabaseTest {
 		
 		subject.loadProperties();
 		
-		assertEquals("Property Dialect", System.getProperty(PROPERTY_DIALECT), "org.hibernate.dialect.PostgreSQLDialect");
-		assertEquals("Property Driver", System.getProperty(PROPERTY_DRIVER_CLASS), "org.postgresql.Driver");
+		assertEquals("Property Dialect", System.getProperty(PROPERTY_DIALECT), "dialectFake");
+		assertEquals("Property Driver", System.getProperty(PROPERTY_DRIVER_CLASS), "driverFake");
 		assertEquals("Property Url", System.getProperty(PROPERTY_CONNECTION_URL), URL_VALUE);
 		assertEquals("Property User", System.getProperty(PROPERTY_CONNECTION_USERNAME), USER_VALUE);
 		assertEquals("Property Pass", System.getProperty(PROPERTY_CONNECTION_PASSWORD), PASS_VALUE);
@@ -74,7 +70,19 @@ public class DatabaseTest {
 	
 	@Test
 	public void withSsl() {
-		Assert.fail();
+		subject.setSsl(true);
+		subject.loadProperties();
+		
+		assertEquals("Property Url", System.getProperty(PROPERTY_CONNECTION_URL), "localhost:5432?ssl=true&sslfactory=sslFactoryFake");
+	}
+
+	@Test
+	public void withSslWithoutFactory() {
+		subject = new DatabaseWithoutSslFactoryFake(URL_VALUE, USER_VALUE, PASS_VALUE);
+		subject.setSsl(true);
+		subject.loadProperties();
+		
+		assertEquals("Property Url", System.getProperty(PROPERTY_CONNECTION_URL), "localhost:5432?ssl=true");
 	}
 	
 }
