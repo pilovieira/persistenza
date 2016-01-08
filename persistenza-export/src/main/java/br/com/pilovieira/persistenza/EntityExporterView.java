@@ -1,4 +1,4 @@
-package br.com.pilovieira.persistenza.export;
+package br.com.pilovieira.persistenza;
 
 import static javax.swing.JFileChooser.APPROVE_OPTION;
 import static javax.swing.JOptionPane.showMessageDialog;
