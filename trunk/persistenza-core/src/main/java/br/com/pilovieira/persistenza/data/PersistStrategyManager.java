@@ -3,7 +3,13 @@ package br.com.pilovieira.persistenza.data;
 
 class PersistStrategyManager {
 	
-	public static final PersistStrategyManager INSTANCE = new PersistStrategyManager();
+	protected static PersistStrategyManager instance;
+	
+	public static PersistStrategyManager getInstance() {
+		if (instance == null)
+			instance = new PersistStrategyManager();
+		return instance;
+	}
 	
 	private PersistStrategy strategy = new Yolo();
 
