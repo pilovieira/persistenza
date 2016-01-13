@@ -1,4 +1,4 @@
-package br.com.pilovieira.persistenza.data;
+package br.com.pilovieira.persistenza.util;
 
 public class UnnacessibleClass {
 	

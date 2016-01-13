@@ -15,6 +15,8 @@ import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import br.com.pilovieira.persistenza.util.UnnacessibleClass;
+
 @RunWith(MockitoJUnitRunner.class)
 public class PersistenzaSingletonTest {
 
@@ -38,13 +40,13 @@ public class PersistenzaSingletonTest {
 		when(sessionFactory.openSession()).thenReturn(session);
 		when(session.createCriteria(Matchers.any(Class.class))).thenReturn(criteria);
 		
-		subject = new PersistenzaSingleton(perSet, new SessionManager(sessionFactory));
+		subject = new PersistenzaSingleton(new SessionManager(sessionFactory), perSet);
 	}
 	
 	@Test
 	public void singletonWithUnassecibleClass() {
 		thrown.expect(RuntimeException.class);
-		thrown.expectMessage("java.lang.IllegalAccessException: Class br.com.pilovieira.persistenza.data.PersistenzaSingleton can not access a member of class br.com.pilovieira.persistenza.data.UnnacessibleClass with modifiers \"private\"");
+		thrown.expectMessage("java.lang.IllegalAccessException: Class br.com.pilovieira.persistenza.data.PersistenzaSingleton can not access a member of class br.com.pilovieira.persistenza.util.UnnacessibleClass with modifiers \"private\"");
 		
 		subject.singleton(UnnacessibleClass.class);
 	}

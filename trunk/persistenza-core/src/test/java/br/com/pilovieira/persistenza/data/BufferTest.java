@@ -7,7 +7,6 @@ import static org.mockito.Mockito.when;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.classic.Session;
-import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -30,18 +29,12 @@ public class BufferTest {
 
 	@Before
 	public void setup() {
-		SessionManagerMock.setMock(new SessionManager(sessionFactory));
 		when(sessionFactory.openSession()).thenReturn(session);
 		when(session.getTransaction()).thenReturn(transaction);
 		
-		subject = new Buffer();
+		subject = new Buffer(new SessionManager(sessionFactory));
 	}
 	
-	@AfterClass
-	public static void tearDown() {
-		SessionManagerMock.clearMock();
-	}
-
 	@Test
 	public void persist() {
 		subject.persist(dog);

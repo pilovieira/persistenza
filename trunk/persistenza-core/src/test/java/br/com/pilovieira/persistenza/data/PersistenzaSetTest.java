@@ -1,73 +1,82 @@
 package br.com.pilovieira.persistenza.data;
 
+import static junit.framework.Assert.assertEquals;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
-import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import br.com.pilovieira.persistenza.entity.Dog;
+
+import com.google.common.base.Function;
+
+@SuppressWarnings("unchecked")
 @RunWith(MockitoJUnitRunner.class)
 public class PersistenzaSetTest {
 	
-	@Mock private PersistStrategyManager strategyManager;
-	@Mock private PersistStrategy strategy;
+	@Mock private SessionManager sessionManager;
 	
 	private PersistenzaSet subject;
 
 	@Before
 	public void setup() {
-		when(strategyManager.get()).thenReturn(strategy);
-		PersistStrategyManagerMock.setMock(strategyManager);
-
-		subject = new PersistenzaSet();
+		subject = new PersistenzaSet(sessionManager);
 	}
 	
-	@AfterClass
-	public static void tearDown() {
-		PersistStrategyManagerMock.clearMock();
+	@Test
+	public void defaultStrategy() {
+		assertEquals("Strategy should be Yolo", Yolo.class, subject.strategy.getClass());
 	}
 	
 	@Test
 	public void pause() {
 		subject.pause();
-
-		verify(strategyManager).buff(true);
+		
+		assertEquals("Strategy should be Buffer", Buffer.class, subject.strategy.getClass());
 	}
 
 	@Test
 	public void play() {
-		subject.play();
+		subject.pause();
+		assertEquals("Strategy should be Buffer", Buffer.class, subject.strategy.getClass());
 		
-		verify(strategyManager).get();
-		verify(strategy).apply();
-		verify(strategyManager).buff(false);
+		subject.persist(new Dog());
+		verify(sessionManager, never()).commit(Matchers.any(Function.class));
+		
+		subject.play();
+
+		verify(sessionManager).commit(Matchers.any(Function.class));
+		assertEquals("Strategy should be Yolo", Yolo.class, subject.strategy.getClass());
 	}
 
 	@Test
 	public void rewind() {
+		subject.pause();
+
+		assertEquals("Strategy should be Buffer", Buffer.class, subject.strategy.getClass());
+		
 		subject.rewind();
 
-		verify(strategyManager).buff(false);
+		assertEquals("Strategy should be Yolo", Yolo.class, subject.strategy.getClass());
 	}
 
 	@Test
 	public void persist() {
-		subject.persist("");
+		subject.persist(new Dog());
 		
-		verify(strategyManager).get();
-		verify(strategy).persist("");
+		verify(sessionManager).commit(Matchers.any(Function.class));
 	}
 	
 	@Test
 	public void delete() {
-		subject.delete("");
+		subject.delete(new Dog());
 		
-		verify(strategyManager).get();
-		verify(strategy).delete("");
+		verify(sessionManager).commit(Matchers.any(Function.class));
 	}
 	
 	

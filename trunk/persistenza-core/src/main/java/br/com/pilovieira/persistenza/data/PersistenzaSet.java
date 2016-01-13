@@ -1,32 +1,39 @@
 package br.com.pilovieira.persistenza.data;
 
 
+
 class PersistenzaSet {
 	
-	private PersistStrategyManager strategy = PersistStrategyManager.getInstance();
+	private SessionManager sessionManager;
+	PersistStrategy strategy;
+	
+	public PersistenzaSet(SessionManager sessionManager) {
+		this.sessionManager = sessionManager;
+		this.strategy = new Yolo(sessionManager);
+	}
 	
 	public void pause() {
-		strategy.buff(true);
+		strategy = new Buffer(sessionManager);
 	}
 	
 	public void play() {
 		try {
-			strategy.get().apply();
+			strategy.apply();
 		} finally {
-			strategy.buff(false);
+			strategy = new Yolo(sessionManager);
 		}
 	}
 
 	public void rewind() {
-		strategy.buff(false);
+		strategy = new Yolo(sessionManager);
 	}
 	
 	public void persist(final Object... entities) {
-		strategy.get().persist(entities);
+		strategy.persist(entities);
 	}
 	
 	public void delete(final Object... entities) {
-		strategy.get().delete(entities);
+		strategy.delete(entities);
 	}
-
+	
 }

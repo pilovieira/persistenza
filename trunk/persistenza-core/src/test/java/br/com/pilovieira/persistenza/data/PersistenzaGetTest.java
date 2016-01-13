@@ -12,7 +12,6 @@ import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.IdentifierEqExpression;
 import org.hibernate.criterion.IlikeExpression;
 import org.hibernate.criterion.SimpleExpression;
-import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -31,16 +30,9 @@ public class PersistenzaGetTest {
 
 	@Before
 	public void setup() {
-		SessionManagerMock.setMock(sessionManager);
-		
-		subject = new PersistenzaGet();
+		subject = new PersistenzaGet(sessionManager);
 	}
 	
-	@AfterClass
-	public static void tearDown() {
-		SessionManagerMock.clearMock();
-	}
-
 	@Test
 	public void all() {
 		subject.all(Dog.class);

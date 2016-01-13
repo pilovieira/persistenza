@@ -9,11 +9,16 @@ import org.hibernate.Session;
 
 import com.google.common.base.Function;
 
-class Buffer extends PersistStrategy {
+class Buffer implements PersistStrategy {
 	
 	private List<Object> persistEntities = new LinkedList<>();
 	private List<Object> deleteEntities = new LinkedList<>();
+	private SessionManager sessionManager;
 
+	public Buffer(SessionManager sessionManager) {
+		this.sessionManager = sessionManager;
+	}
+	
 	@Override
 	public void persist(Object... entities) {
 		persistEntities.addAll(asList(entities));
