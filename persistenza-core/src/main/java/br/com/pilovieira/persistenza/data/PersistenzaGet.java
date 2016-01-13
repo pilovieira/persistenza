@@ -8,7 +8,11 @@ import org.hibernate.criterion.Restrictions;
 
 class PersistenzaGet {
 	
-	private SessionManager sessionManager = SessionManager.getInstance();
+	private SessionManager sessionManager;
+	
+	public PersistenzaGet(SessionManager sessionManager) {
+		this.sessionManager = sessionManager;
+	}
 	
 	public <T> List<T> all(final Class<T> clazz) {
 		return sessionManager.list(clazz, new Criterion[]{});

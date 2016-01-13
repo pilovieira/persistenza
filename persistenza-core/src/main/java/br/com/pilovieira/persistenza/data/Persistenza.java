@@ -7,9 +7,10 @@ import org.hibernate.criterion.Criterion;
 
 public final class Persistenza {
 	
-	private static final PersistenzaSet perSet = new PersistenzaSet();
-	private static final PersistenzaGet perGet = new PersistenzaGet();
-	private static final PersistenzaSingleton perSing = new PersistenzaSingleton(perSet);
+	private static final SessionManager sessionManager = new SessionManager();
+	private static final PersistenzaSet perSet = new PersistenzaSet(sessionManager);
+	private static final PersistenzaGet perGet = new PersistenzaGet(sessionManager);
+	private static final PersistenzaSingleton perSing = new PersistenzaSingleton(sessionManager, perSet);
 	
 	public static void pause() {
 		perSet.pause();

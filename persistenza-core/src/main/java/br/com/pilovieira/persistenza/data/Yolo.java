@@ -4,7 +4,13 @@ import org.hibernate.Session;
 
 import com.google.common.base.Function;
 
-class Yolo extends PersistStrategy {
+class Yolo implements PersistStrategy {
+	
+	private SessionManager sessionManager;
+
+	public Yolo(SessionManager sessionManager) {
+		this.sessionManager = sessionManager;
+	}
 	
 	public void persist(final Object... entities) {
 		sessionManager.commit(new Function<Session, Void>() {

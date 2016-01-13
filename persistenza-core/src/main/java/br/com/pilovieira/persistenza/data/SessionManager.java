@@ -16,24 +16,16 @@ class SessionManager {
 	
 	protected static SessionManager instance;
 	
-	public static SessionManager getInstance() {
-		if (instance == null)
-			instance = new SessionManager();
-		return instance;
-	}
-	
 	private SessionFactory sessionFactory;
-
-	public SessionManager() {
-		this(PersistenzaManager.getFactory());
-	}
+	
+	public SessionManager() {}
 	
 	SessionManager(SessionFactory sessionFactory) {
 		this.sessionFactory = sessionFactory;
 	}
 	
 	public <T> T execute(Function<Session, T> function){
-		Session session = sessionFactory.openSession();
+		Session session = getSessionFactory().openSession();
 
 		try {
 			return function.apply(session);
@@ -44,7 +36,7 @@ class SessionManager {
 	
 	@SuppressWarnings("unchecked")
 	public <T> List<T> list(Class<T> clazz, Criterion... criterions){
-		Session session = sessionFactory.openSession();
+		Session session = getSessionFactory().openSession();
 
 		try {
 			Criteria criteria = session.createCriteria(clazz).setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
@@ -59,7 +51,7 @@ class SessionManager {
 	}
 	
 	public void commit(Function<Session, Void> function){
-		Session session = sessionFactory.openSession();
+		Session session = getSessionFactory().openSession();
 		
 		try {
 			session.beginTransaction();
@@ -71,5 +63,15 @@ class SessionManager {
 		} finally {
 			session.close();
 		}
+	}
+	
+	public SessionFactory getSessionFactory() {
+		if (sessionFactory == null)
+			sessionFactory = PersistenzaManager.getFactory();
+		
+		if (sessionFactory == null)
+			throw new RuntimeException("Session Factory not loaded!");
+		
+		return sessionFactory;
 	}
 }

@@ -1,4 +1,4 @@
-package br.com.pilovieira.persistenza;
+package br.com.pilovieira.persistenza.util;
 
 public class DatabaseWithoutSslFactoryFake extends DatabaseFake {
 

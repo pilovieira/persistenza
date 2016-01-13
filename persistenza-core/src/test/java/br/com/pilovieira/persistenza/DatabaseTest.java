@@ -11,6 +11,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import br.com.pilovieira.persistenza.util.DatabaseFake;
+import br.com.pilovieira.persistenza.util.DatabaseWithoutSslFactoryFake;
+
 @RunWith(MockitoJUnitRunner.class)
 public class DatabaseTest {
 	

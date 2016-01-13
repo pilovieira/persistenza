@@ -1,4 +1,6 @@
-package br.com.pilovieira.persistenza;
+package br.com.pilovieira.persistenza.util;
+
+import br.com.pilovieira.persistenza.Database;
 
 public class DatabaseFake extends Database {
 

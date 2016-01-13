@@ -9,11 +9,7 @@ class PersistenzaSingleton {
 	private SessionManager sessionManager;
 	private PersistenzaSet perSet;
 	
-	public PersistenzaSingleton(PersistenzaSet perSet) {
-		this(perSet, SessionManager.getInstance());
-	}
-
-	public PersistenzaSingleton(PersistenzaSet perSet, SessionManager sessionManager) {
+	public PersistenzaSingleton(SessionManager sessionManager, PersistenzaSet perSet) {
 		this.perSet = perSet;
 		this.sessionManager = sessionManager;
 	}
