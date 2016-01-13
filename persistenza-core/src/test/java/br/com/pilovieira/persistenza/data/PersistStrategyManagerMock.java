@@ -6,4 +6,8 @@ public class PersistStrategyManagerMock extends PersistStrategyManager {
 		PersistStrategyManager.instance = mock;
 	}
 
+	public static void clearMock() {
+		setMock(null);
+	}
+
 }

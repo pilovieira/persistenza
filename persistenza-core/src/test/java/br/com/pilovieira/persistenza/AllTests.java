@@ -6,6 +6,8 @@ import org.junit.runners.Suite.SuiteClasses;
 
 import br.com.pilovieira.persistenza.data.BufferTest;
 import br.com.pilovieira.persistenza.data.PersistStrategyManagerTest;
+import br.com.pilovieira.persistenza.data.PersistenzaGetTest;
+import br.com.pilovieira.persistenza.data.PersistenzaRestrictionsTest;
 import br.com.pilovieira.persistenza.data.PersistenzaSingletonTest;
 import br.com.pilovieira.persistenza.data.PersistenzaSetTest;
 import br.com.pilovieira.persistenza.data.SessionManagerTest;
@@ -20,16 +22,21 @@ import br.com.pilovieira.persistenza.functional.PersistYoloFunctionalTest;
 		{
 			DatabaseTest.class,
 			PersistenzaManagerTest.class,
+			
 			BufferTest.class,
-			PersistenzaGetFunctionalTest.class,
+			PersistenzaGetTest.class,
+			PersistenzaRestrictionsTest.class,
 			PersistenzaSetTest.class,
 			PersistenzaSingletonTest.class,
-			PersistYoloFunctionalTest.class,
 			PersistStrategyManagerTest.class,
 			SessionManagerTest.class,
 			YoloTest.class,
+			
 			HyperSqlTest.class,
-			PostgreSqlTest.class
+			PostgreSqlTest.class,
+			
+			PersistenzaGetFunctionalTest.class,
+			PersistYoloFunctionalTest.class,
 		})
 public class AllTests {
 

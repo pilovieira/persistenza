@@ -18,12 +18,16 @@ class SessionManager {
 	
 	public static SessionManager getInstance() {
 		if (instance == null)
-			instance = new SessionManager(PersistenzaManager.getFactory());
+			instance = new SessionManager();
 		return instance;
 	}
 	
 	private SessionFactory sessionFactory;
 
+	public SessionManager() {
+		this(PersistenzaManager.getFactory());
+	}
+	
 	SessionManager(SessionFactory sessionFactory) {
 		this.sessionFactory = sessionFactory;
 	}

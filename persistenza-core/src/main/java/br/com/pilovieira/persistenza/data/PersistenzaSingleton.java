@@ -2,8 +2,6 @@ package br.com.pilovieira.persistenza.data;
 
 import org.hibernate.Session;
 
-import br.com.pilovieira.persistenza.PersistenzaManager;
-
 import com.google.common.base.Function;
 
 class PersistenzaSingleton {
@@ -12,14 +10,14 @@ class PersistenzaSingleton {
 	private PersistenzaSet perSet;
 	
 	public PersistenzaSingleton(PersistenzaSet perSet) {
-		this(perSet, new SessionManager(PersistenzaManager.getFactory()));
+		this(perSet, SessionManager.getInstance());
 	}
 
-	PersistenzaSingleton(PersistenzaSet perSet, SessionManager sessionManager) {
+	public PersistenzaSingleton(PersistenzaSet perSet, SessionManager sessionManager) {
 		this.perSet = perSet;
 		this.sessionManager = sessionManager;
 	}
-	
+
 	public <T> T singleton(final Class<T> clazz) {
 		return sessionManager.execute(new Function<Session, T>() {
 			@Override

@@ -3,6 +3,7 @@ package br.com.pilovieira.persistenza.data;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -23,6 +24,11 @@ public class PersistenzaSetTest {
 		PersistStrategyManagerMock.setMock(strategyManager);
 
 		subject = new PersistenzaSet();
+	}
+	
+	@AfterClass
+	public static void tearDown() {
+		PersistStrategyManagerMock.clearMock();
 	}
 	
 	@Test
