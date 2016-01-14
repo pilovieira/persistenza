@@ -59,5 +59,6 @@ public final class Persistenza {
 	public static <T> T singleton(final Class<T> clazz) {
 		return perSing.singleton(clazz);
 	}
-
+	
+	private Persistenza() {}
 }
