@@ -42,4 +42,6 @@ public final class PersistenzaManager {
 	public static SessionFactory getFactory() {
 		return factory;
 	}
+	
+	private PersistenzaManager() {}
 }

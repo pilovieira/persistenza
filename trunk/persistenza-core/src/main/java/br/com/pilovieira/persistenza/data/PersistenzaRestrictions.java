@@ -4,7 +4,7 @@ import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Restrictions;
 
 
-public abstract class PersistenzaRestrictions {
+public class PersistenzaRestrictions {
 	
 	public static Criterion eq(String atributo, Object valor) {
 		if (valor != null)
@@ -13,4 +13,5 @@ public abstract class PersistenzaRestrictions {
 		return Restrictions.isNull(atributo);
 	}
 
+	private PersistenzaRestrictions() {}
 }

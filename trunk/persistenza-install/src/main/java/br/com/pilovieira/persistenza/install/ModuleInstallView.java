@@ -42,6 +42,7 @@ import org.reflections.util.ConfigurationBuilder;
 
 import br.com.pilovieira.persistenza.Database;
 import br.com.pilovieira.persistenza.PersistenzaManager;
+
 import javax.swing.JCheckBox;
 
 public class ModuleInstallView extends JFrame {

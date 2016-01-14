@@ -32,9 +32,6 @@ import org.reflections.serializers.JavaCodeSerializer;
 import org.reflections.util.ClasspathHelper;
 import org.reflections.util.ConfigurationBuilder;
 
-import br.com.pilovieira.persistenza.Database;
-import br.com.pilovieira.persistenza.PersistenzaManager;
-
 public class EntityExporterView extends JFrame {
 
 	private static final long serialVersionUID = -8002378347630063831L;

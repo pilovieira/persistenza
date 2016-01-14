@@ -14,11 +14,13 @@ import java.sql.SQLException;
 import java.util.Calendar;
 import java.util.List;
 
+import org.hibernate.criterion.Criterion;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
 import br.com.pilovieira.persistenza.data.Persistenza;
+import br.com.pilovieira.persistenza.data.PersistenzaRestrictions;
 import br.com.pilovieira.persistenza.entity.Config;
 import br.com.pilovieira.persistenza.entity.Dog;
 import br.com.pilovieira.persistenza.entity.Event;
@@ -81,6 +83,18 @@ public class PersistenzaGetFunctionalTest {
 		Persistenza.persist(new Dog(4, null));
 		
 		List<Dog> dogs = Persistenza.search(Dog.class, Dog.ATR_NAME, null);
+		
+		assertEquals("Dogs size", 1, dogs.size());
+		Dog dog = dogs.get(0);
+		assertNull("Name should be null", dog.getName());
+	}
+
+	@Test
+	public void searchWithCriterion() {
+		Persistenza.persist(new Dog(4, null));
+		
+		Criterion criterion = PersistenzaRestrictions.eq(Dog.ATR_NAME, null);
+		List<Dog> dogs = Persistenza.search(Dog.class, criterion);
 		
 		assertEquals("Dogs size", 1, dogs.size());
 		Dog dog = dogs.get(0);

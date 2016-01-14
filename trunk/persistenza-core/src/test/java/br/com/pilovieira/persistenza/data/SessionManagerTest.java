@@ -13,7 +13,9 @@ import org.hibernate.Transaction;
 import org.hibernate.classic.Session;
 import org.hibernate.criterion.Criterion;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.InOrder;
 import org.mockito.Mock;
@@ -23,6 +25,8 @@ import com.google.common.base.Function;
 
 @RunWith(MockitoJUnitRunner.class)
 public class SessionManagerTest {
+	
+	@Rule public ExpectedException thrown = ExpectedException.none();
 
 	@Mock private Function<org.hibernate.Session, Void> commitFunction;
 	@Mock private SessionFactory sessionFactory;
@@ -142,5 +146,14 @@ public class SessionManagerTest {
 		order.verify(criteria).add(criterion);
 		order.verify(criteria).list();
 		order.verify(session).close();
+	}
+	
+	@Test
+	public void errorSessionFactoryNotLoaded() {
+		thrown.expect(RuntimeException.class);
+		thrown.expectMessage("Session Factory not loaded!");
+		
+		SessionManager sessionManager = new SessionManager();
+		sessionManager.getSessionFactory();
 	}
 }
