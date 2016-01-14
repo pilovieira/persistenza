@@ -7,10 +7,13 @@ import org.hibernate.cfg.AnnotationConfiguration;
 
 public final class PersistenzaManager {
 	
-	private static final String ERROR_DATABASE_NOT_LOADED = "Database not loaded.";
-	
 	private static SessionFactory factory;
 	private static Database database;
+	
+	public static void load(Database database) {
+		setDatabase(database);
+		load();
+	}
 	
 	public static void setDatabase(Database database) {
 		validate(database);
@@ -34,9 +37,9 @@ public final class PersistenzaManager {
 		return database.getConnection();
 	}
 
-	private static void validate(Database databaseManager) {
-		if (databaseManager == null)
-			throw new RuntimeException(ERROR_DATABASE_NOT_LOADED);
+	private static void validate(Database database) {
+		if (database == null)
+			throw new RuntimeException("Database not loaded.");
 	}
 
 	public static SessionFactory getFactory() {
