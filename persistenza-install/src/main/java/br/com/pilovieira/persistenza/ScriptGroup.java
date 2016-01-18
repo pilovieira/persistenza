@@ -1,4 +1,4 @@
-package br.com.pilovieira.persistenza.install;
+package br.com.pilovieira.persistenza;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;

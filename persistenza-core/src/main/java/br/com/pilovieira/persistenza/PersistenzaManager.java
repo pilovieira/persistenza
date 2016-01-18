@@ -15,13 +15,13 @@ public final class PersistenzaManager {
 		load();
 	}
 	
-	public static void setDatabase(Database database) {
+	static void setDatabase(Database database) {
 		validate(database);
 		PersistenzaManager.database = database;
 		database.loadProperties();
 	}
 	
-	public static void load() {
+	static void load() {
 		validate(database);
 		loadEntities();
 	}
