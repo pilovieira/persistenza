@@ -181,8 +181,7 @@ public class EntityExporterView extends JFrame {
 				Constructor<? extends Database> constructor = ((Class<? extends Database>)dropDatabases.getSelectedItem()).getConstructor(String.class, String.class, String.class);
 				Database database = constructor.newInstance(textUrl.getText(), textUser.getText(), textPass.getText());
 				database.setSsl(chkSsl.isSelected());
-				PersistenzaManager.setDatabase(database);
-				PersistenzaManager.load();
+				PersistenzaManager.load(database);
 			} catch (Exception e) {
 				throw new RuntimeException(e);
 			}

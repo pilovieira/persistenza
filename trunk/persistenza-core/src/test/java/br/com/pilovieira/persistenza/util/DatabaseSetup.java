@@ -24,8 +24,7 @@ public class DatabaseSetup {
 		HyperSql hyperSql = new HyperSql("jdbc:hsqldb:mem:.", "sa", "");
 		hyperSql.setShowSql(true);
 		
-		PersistenzaManager.setDatabase(hyperSql);
-		PersistenzaManager.load();
+		PersistenzaManager.load(hyperSql);
 	}
 
 	public static void clear(Class... entities) throws SQLException {

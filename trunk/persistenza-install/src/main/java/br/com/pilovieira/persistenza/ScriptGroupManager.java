@@ -1,4 +1,4 @@
-package br.com.pilovieira.persistenza.install;
+package br.com.pilovieira.persistenza;
 
 import static java.util.Collections.sort;
 
