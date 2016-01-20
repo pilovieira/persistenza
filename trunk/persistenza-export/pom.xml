@@ -3,7 +3,7 @@
 	<parent>
 		<groupId>br.com.pilovieira.persistenza</groupId>
 		<artifactId>persistenza</artifactId>
-		<version>4.0</version>
+		<version>4.1-SNAPSHOT</version>
 	</parent>
 	<artifactId>persistenza-export</artifactId>
 	<name>Persistenza Export</name>
