@@ -240,7 +240,6 @@ public class ModuleInstallView extends JFrame {
 			selectFile();
 			Map<String, Set<Script>> scripts = new ScriptLoader().load(selectedFile);
 			groupManager = new ScriptGroupManager(scripts);
-			groupManager.refreshGroups();
 		}
 		
 		private void selectFile() {

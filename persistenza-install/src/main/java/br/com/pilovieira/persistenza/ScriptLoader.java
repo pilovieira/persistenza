@@ -14,9 +14,15 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipException;
 import java.util.zip.ZipFile;
+
+import org.reflections.Reflections;
+import org.reflections.scanners.ResourcesScanner;
+import org.reflections.util.ClasspathHelper;
+import org.reflections.util.ConfigurationBuilder;
 
 public class ScriptLoader {
 	
@@ -27,6 +33,27 @@ public class ScriptLoader {
 	
 	private Map<String, Set<Script>> scripts = new HashMap<String, Set<Script>>();
 
+	public Map<String, Set<Script>> loadByResources() {
+		try {
+			for (String name : getResourcesNames())
+				loadScript(ClassLoader.getSystemResourceAsStream(name));
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+		
+		return scripts;
+	}
+
+	private Set<String> getResourcesNames() {
+		ConfigurationBuilder config = new ConfigurationBuilder();
+		config.setUrls(ClasspathHelper.forClassLoader());
+		config.setScanners(new ResourcesScanner());
+		
+		Reflections reflections = new Reflections(config);
+		
+		return reflections.getResources(Pattern.compile(".*\\.install"));
+	}
+	
 	public Map<String, Set<Script>> load(File file) {
 		try {
 			loadZipFile(file);
@@ -45,13 +72,13 @@ public class ScriptLoader {
 			ZipEntry zipEntry = (ZipEntry)entries.nextElement();
 			
 			if (zipEntry.getName().endsWith(SCRIPT_EXTENSION))
-				loadScript(zipEntry, zipFile.getInputStream(zipEntry));
+				loadScript(zipFile.getInputStream(zipEntry));
 		}
 		
 		zipFile.close();
 	}
 	
-	private void loadScript(ZipEntry zipEntry, InputStream stream) throws IOException {
+	private void loadScript(InputStream stream) throws IOException {
 		InputStreamReader is = new InputStreamReader(stream);
 		BufferedReader br = new BufferedReader(is);
 

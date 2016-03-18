@@ -5,23 +5,29 @@ import static java.util.Collections.sort;
 import java.sql.Connection;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import br.com.pilovieira.persistenza.PersistenzaManager;
 import br.com.pilovieira.persistenza.data.Persistenza;
+import br.com.pilovieira.persistenza.update.PriorityGroup;
 
 public class ScriptGroupManager {
 	
 	private Map<String, Set<Script>> scripts;
+	private List<String> groupOrder;
 	
 	public ScriptGroupManager(Map<String, Set<Script>> scripts) {
 		this.scripts = scripts;
+		refreshGroups();
 	}
 	
-	public void refreshGroups() {
+	public void setGroupOrder(List<String> groupOrder) {
+		this.groupOrder = groupOrder;
+	}
+	
+	private void refreshGroups() {
 		for (String groupName : scripts.keySet())
 			if (Persistenza.search(ScriptGroup.class, ScriptGroup.NAME, groupName).isEmpty())
 				Persistenza.persist(new ScriptGroup(groupName));
@@ -30,7 +36,7 @@ public class ScriptGroupManager {
 	public List<String> countScripts() {
 		List<String> groupCount = new ArrayList<String>();
 		
-		for (ScriptGroup group : Persistenza.all(ScriptGroup.class)) {
+		for (ScriptGroup group : getScriptGroups()) {
 			int qtd = 0;
 			
 			Set<Script> set = scripts.get(group.getName());
@@ -58,11 +64,15 @@ public class ScriptGroupManager {
 				setLast(group, script);
 			}
 	}
+	
+	public boolean needInstall() {
+		return !getInstallScripts().isEmpty();
+	}
 
-	private Map<ScriptGroup, List<Script>> getInstallScripts() {
-		Map<ScriptGroup, List<Script>> map = new HashMap<ScriptGroup, List<Script>>();
+	private LinkedHashMap<ScriptGroup, List<Script>> getInstallScripts() {
+		LinkedHashMap<ScriptGroup, List<Script>> map = new LinkedHashMap<ScriptGroup, List<Script>>();
 		
-		for (ScriptGroup group : Persistenza.all(ScriptGroup.class)) {
+		for (ScriptGroup group : getScriptGroups()) {
 			List<Script> toInstall = new ArrayList<Script>();
 			
 			Set<Script> set = scripts.get(group.getName());
@@ -99,6 +109,34 @@ public class ScriptGroupManager {
 	private void setLast(ScriptGroup group, Script script) {
 		group.setLast(script.getSequence());
 		Persistenza.persist(group);
+	}
+	
+	private List<ScriptGroup> getScriptGroups() {
+		List<PriorityGroup> priorities = new ArrayList<>();
+		List<ScriptGroup> unpriorities = new ArrayList<>();
+		
+		categorize(priorities, unpriorities);
+		
+		sort(priorities);
+		
+		List<ScriptGroup> groups = new ArrayList<>();
+		for (PriorityGroup priority : priorities)
+			groups.add(priority.getGroup());
+		
+		groups.addAll(unpriorities);
+		
+		return groups;
+	}
+
+	private void categorize(List<PriorityGroup> priorities, List<ScriptGroup> unpriorities) {
+		for (ScriptGroup group : Persistenza.all(ScriptGroup.class)) {
+			int index = groupOrder.indexOf(group.getName());
+			
+			if (index != -1)
+				priorities.add(new PriorityGroup(index, group));
+			else
+				unpriorities.add(group);
+		}
 	}
 
 }
