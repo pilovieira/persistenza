@@ -1,8 +1,8 @@
-package br.com.pilovieira.persistenza.update;
+package br.com.pilovieira.persistenza.script;
 
-import br.com.pilovieira.persistenza.ScriptGroup;
 
-public class PriorityGroup implements Comparable<PriorityGroup> {
+
+class PriorityGroup implements Comparable<PriorityGroup> {
 	
 	private Integer index;
 	private ScriptGroup group;

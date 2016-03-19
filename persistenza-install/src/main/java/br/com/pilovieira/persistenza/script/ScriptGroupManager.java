@@ -1,4 +1,4 @@
-package br.com.pilovieira.persistenza;
+package br.com.pilovieira.persistenza.script;
 
 import static java.util.Collections.sort;
 
@@ -10,13 +10,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import br.com.pilovieira.persistenza.PersistenzaManager;
 import br.com.pilovieira.persistenza.data.Persistenza;
-import br.com.pilovieira.persistenza.update.PriorityGroup;
 
 public class ScriptGroupManager {
 	
 	private Map<String, Set<Script>> scripts;
 	private List<String> groupOrder;
+	private LinkedHashMap<ScriptGroup, List<Script>> installScripts;
 	
 	public ScriptGroupManager(Map<String, Set<Script>> scripts) {
 		this.scripts = scripts;
@@ -36,40 +37,38 @@ public class ScriptGroupManager {
 	public List<String> countScripts() {
 		List<String> groupCount = new ArrayList<String>();
 		
-		for (ScriptGroup group : getScriptGroups()) {
-			int qtd = 0;
-			
-			Set<Script> set = scripts.get(group.getName());
-			if (set == null)
-				groupCount.add(String.format("%s | no scripts found", group.getName()));
-			else {
-				for (Script script : set)
-					if (script.getSequence() > group.getLast())
-						qtd++;
-				
-				groupCount.add(String.format("%s | %s scripts", group.getName(), qtd));
-			}
-
-		}
+		Map<ScriptGroup, List<Script>> installScripts = getInstallScripts();
+		for (ScriptGroup group : installScripts.keySet())
+			groupCount.add(String.format("%s | %s scripts", group.getName(), installScripts.get(group).size()));
 		
 		return groupCount;
 	}
 
-	public void installScripts() {
+	public void installScripts(ScriptLogger logger) {
 		Map<ScriptGroup, List<Script>> installScripts = getInstallScripts();
 		
 		for (ScriptGroup group : installScripts.keySet())
 			for (Script script : installScripts.get(group)) {
-				execute(script);
+				execute(script, logger);
 				setLast(group, script);
 			}
 	}
 	
 	public boolean needInstall() {
-		return !getInstallScripts().isEmpty();
+		for (List<Script> script : getInstallScripts().values())
+			if (!script.isEmpty())
+				return true;
+		
+		return false;
 	}
 
 	private LinkedHashMap<ScriptGroup, List<Script>> getInstallScripts() {
+		if (installScripts == null)
+			this.installScripts = loadInstallScripts();
+		return installScripts;
+	}
+	
+	private LinkedHashMap<ScriptGroup, List<Script>> loadInstallScripts() {
 		LinkedHashMap<ScriptGroup, List<Script>> map = new LinkedHashMap<ScriptGroup, List<Script>>();
 		
 		for (ScriptGroup group : getScriptGroups()) {
@@ -90,15 +89,17 @@ public class ScriptGroupManager {
 		return map;
 	}
 	
-	private void execute(Script script) {
+	private void execute(Script script, ScriptLogger logger) {
 		try {
 			Connection connection = PersistenzaManager.getConnection();
 	        
 	        connection.setAutoCommit(false);
 	        Statement statement = connection.createStatement();
 	
-	        for (String query : script.getQueries()) 
+	        for (String query : script.getQueries()) {
+	        	logger.log(query);
 	        	statement.executeUpdate(query);
+	        }
 	        
 	        connection.commit();
 	    } catch (Exception ex) {

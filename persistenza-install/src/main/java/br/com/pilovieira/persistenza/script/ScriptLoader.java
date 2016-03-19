@@ -1,4 +1,4 @@
-package br.com.pilovieira.persistenza;
+package br.com.pilovieira.persistenza.script;
 
 import static com.google.common.io.Closeables.closeQuietly;
 import static java.util.Arrays.asList;

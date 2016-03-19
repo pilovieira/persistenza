@@ -42,6 +42,11 @@ import org.reflections.util.ConfigurationBuilder;
 
 import br.com.pilovieira.persistenza.Database;
 import br.com.pilovieira.persistenza.PersistenzaManager;
+import br.com.pilovieira.persistenza.script.Script;
+import br.com.pilovieira.persistenza.script.ScriptGroup;
+import br.com.pilovieira.persistenza.script.ScriptGroupManager;
+import br.com.pilovieira.persistenza.script.ScriptLoader;
+import br.com.pilovieira.persistenza.script.ScriptLogger;
 
 import javax.swing.JCheckBox;
 
@@ -72,6 +77,7 @@ public class ModuleInstallView extends JFrame {
 	private JLabel lblTool;
 	private JButton btnToolInstall;
 	private JCheckBox chkSsl;
+	private TextLog textLog;
 	
 	public static void main(String[] args) {
 		new ModuleInstallView();
@@ -159,7 +165,7 @@ public class ModuleInstallView extends JFrame {
 		panelEntityExporter = new JPanel();
 		panelEntityExporter.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Module Installer", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		contentPane.add(panelEntityExporter, "cell 0 1,grow");
-		panelEntityExporter.setLayout(new MigLayout("", "[grow]", "[][][grow][]"));
+		panelEntityExporter.setLayout(new MigLayout("", "[grow]", "[][][grow][][]"));
 		
 		JLabel lblJarParaExportar = new JLabel("Jar para instalar:");
 		panelEntityExporter.add(lblJarParaExportar, "flowx,cell 0 0");
@@ -179,8 +185,13 @@ public class ModuleInstallView extends JFrame {
 		
 		panelEntityExporter.add(scroll, "cell 0 2,grow");
 		
+		textLog = new TextLog();
+		textLog.setEditable(false);
+		panelEntityExporter.add(textLog, "cell 0 3,growx");
+		textLog.setColumns(10);
+		
 		btnInstall = new JButton("Instalar Scripts");
-		panelEntityExporter.add(btnInstall, "cell 0 3,alignx right");
+		panelEntityExporter.add(btnInstall, "cell 0 4,alignx right");
 		btnInstall.addActionListener(new Install());
 	}
 	
@@ -264,13 +275,22 @@ public class ModuleInstallView extends JFrame {
 			listScripts.setModel(listModel);
 		}
 	}
+	
+	private class TextLog extends JTextField implements ScriptLogger {
+		private static final long serialVersionUID = 4512181326583253573L;
+
+		@Override
+		public void log(String log) {
+			setText(log);
+		}
+	}
 
 	private class Install implements ActionListener {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			try {
-				groupManager.installScripts();
+				groupManager.installScripts(textLog);
 				showMessageDialog(ModuleInstallView.this, "Exportado com sucesso!");
 			} catch (Exception ex) {
 				showMessageDialog(ModuleInstallView.this, ex.getMessage());
