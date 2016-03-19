@@ -3,7 +3,7 @@
 	<parent>
 		<groupId>br.com.pilovieira.persistenza</groupId>
 		<artifactId>persistenza</artifactId>
-		<version>5.0</version>
+		<version>5.1-SNAPSHOT</version>
 	</parent>
 	<artifactId>persistenza-install</artifactId>
 	<name>Persistenza Install</name>
