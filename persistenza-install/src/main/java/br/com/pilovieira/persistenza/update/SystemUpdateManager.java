@@ -44,7 +44,7 @@ public class SystemUpdateManager {
 		AnnotationConfiguration config = new AnnotationConfiguration();
 		config.addAnnotatedClass(ScriptGroup.class);
 		SchemaExport exporter = new SchemaExport(config);
-		exporter.create(true, true);
+		exporter.execute(true, true, false, true);
 	}
 	
 	private void loadScripts() {
