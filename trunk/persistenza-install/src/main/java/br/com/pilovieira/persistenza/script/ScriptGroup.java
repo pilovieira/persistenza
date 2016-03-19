@@ -1,4 +1,4 @@
-package br.com.pilovieira.persistenza;
+package br.com.pilovieira.persistenza.script;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;

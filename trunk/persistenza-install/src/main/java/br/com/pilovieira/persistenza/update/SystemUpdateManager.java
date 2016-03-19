@@ -11,10 +11,10 @@ import org.hibernate.cfg.AnnotationConfiguration;
 import org.hibernate.tool.hbm2ddl.SchemaExport;
 
 import br.com.pilovieira.persistenza.PersistenzaManager;
-import br.com.pilovieira.persistenza.Script;
-import br.com.pilovieira.persistenza.ScriptGroup;
-import br.com.pilovieira.persistenza.ScriptGroupManager;
-import br.com.pilovieira.persistenza.ScriptLoader;
+import br.com.pilovieira.persistenza.script.Script;
+import br.com.pilovieira.persistenza.script.ScriptGroup;
+import br.com.pilovieira.persistenza.script.ScriptGroupManager;
+import br.com.pilovieira.persistenza.script.ScriptLoader;
 
 public class SystemUpdateManager {
 	
