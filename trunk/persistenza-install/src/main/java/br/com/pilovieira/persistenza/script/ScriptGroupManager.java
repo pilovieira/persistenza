@@ -10,10 +10,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.log4j.Logger;
+
 import br.com.pilovieira.persistenza.PersistenzaManager;
 import br.com.pilovieira.persistenza.data.Persistenza;
 
 public class ScriptGroupManager {
+	
+	private static final Logger LOGGER = Logger.getLogger(ScriptGroupManager.class);
 	
 	private Map<String, Set<Script>> scripts;
 	private List<String> groupOrder;
@@ -97,6 +101,7 @@ public class ScriptGroupManager {
 	        Statement statement = connection.createStatement();
 	
 	        for (String query : script.getQueries()) {
+	        	LOGGER.info(query);
 	        	logger.log(query);
 	        	statement.executeUpdate(query);
 	        }
