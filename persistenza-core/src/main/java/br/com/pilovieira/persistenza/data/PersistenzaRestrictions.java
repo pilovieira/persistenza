@@ -6,11 +6,15 @@ import org.hibernate.criterion.Restrictions;
 
 public class PersistenzaRestrictions {
 	
-	public static Criterion eq(String atributo, Object valor) {
-		if (valor != null)
-			return Restrictions.eq(atributo, valor);
+	public static Criterion eq(String attribute, Object value) {
+		if (value != null)
+			return Restrictions.eq(attribute, value);
 		
-		return Restrictions.isNull(atributo);
+		return Restrictions.isNull(attribute);
+	}
+	
+	public static Criterion like(String attribute, String value) {
+		return Restrictions.ilike(attribute, "%" + value + "%");
 	}
 
 	private PersistenzaRestrictions() {}
