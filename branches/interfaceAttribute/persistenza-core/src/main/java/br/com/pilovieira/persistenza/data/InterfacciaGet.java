@@ -15,23 +15,23 @@ import org.hibernate.mapping.Column;
 import org.hibernate.mapping.PersistentClass;
 
 import br.com.pilovieira.persistenza.PersistenzaHeap;
-import br.com.pilovieira.persistenza.annotation.InterfaceAttribute;
+import br.com.pilovieira.persistenza.annotation.Interfaccia;
 
 import com.google.common.base.Function;
 
-class InterfaceAttributeSync {
+class InterfacciaGet {
 	
 	private static final String GET_ATTRIBUTE_ID_SQL_FORMAT = "select %s from %s where %s = '%s'";
 	
 	private SessionManager sessionManager;
 	
-	public InterfaceAttributeSync(SessionManager sessionManager) {
+	public InterfacciaGet(SessionManager sessionManager) {
 		this.sessionManager = sessionManager;
 	}
 
-	public <T> List<T> syncList(List<T> list) {
+	public <T> List<T> list(List<T> list) {
 		for (T entity : list)
-			for (Field field : getFieldsListWithAnnotation(entity.getClass(), InterfaceAttribute.class))
+			for (Field field : getFieldsListWithAnnotation(entity.getClass(), Interfaccia.class))
 				loadAttribute(entity, field);
 		
 		return list;
@@ -50,7 +50,7 @@ class InterfaceAttributeSync {
 	}
 	
 	private <T> Integer getAttributeId(T entity, Field field) throws IllegalAccessException {
-		InterfaceAttribute annotation = field.getAnnotation(InterfaceAttribute.class);
+		Interfaccia annotation = field.getAnnotation(Interfaccia.class);
 		final String fieldName = annotation.name().isEmpty() ? field.getName() : annotation.name();
 		
 		PersistentClass classMapping = PersistenzaHeap.getConfiguration().getClassMapping(entity.getClass().getName());
