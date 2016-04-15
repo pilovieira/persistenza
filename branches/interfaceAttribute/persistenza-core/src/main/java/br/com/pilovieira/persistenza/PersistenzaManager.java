@@ -2,13 +2,9 @@ package br.com.pilovieira.persistenza;
 
 import java.sql.Connection;
 
-import org.hibernate.SessionFactory;
 import org.hibernate.cfg.AnnotationConfiguration;
 
 public final class PersistenzaManager {
-	
-	private static SessionFactory factory;
-	private static Database database;
 	
 	public static void load(Database database) {
 		setDatabase(database);
@@ -16,35 +12,32 @@ public final class PersistenzaManager {
 	}
 	
 	static void setDatabase(Database database) {
-		validate(database);
-		PersistenzaManager.database = database;
+		PersistenzaHeap.setDatabase(database);
+		validateDatabase();
 		database.loadProperties();
 	}
 	
 	static void load() {
-		validate(database);
+		validateDatabase();
 		loadEntities();
 	}
 	
 	private static void loadEntities() {
 		AnnotationConfiguration config = new AnnotationConfiguration();
 		new EntityLoader(config).load();
-		factory = config.buildSessionFactory();
+		PersistenzaHeap.setConfiguration(config);
+		PersistenzaHeap.setSessionFactory(config.buildSessionFactory());
 	}
 	
 	public static Connection getConnection() {
-		validate(database);
-		return database.getConnection();
+		validateDatabase();
+		return PersistenzaHeap.getDatabase().getConnection();
 	}
 
-	private static void validate(Database database) {
-		if (database == null)
+	private static void validateDatabase() {
+		if (PersistenzaHeap.getDatabase() == null)
 			throw new RuntimeException("Database not loaded.");
 	}
 
-	public static SessionFactory getFactory() {
-		return factory;
-	}
-	
 	private PersistenzaManager() {}
 }

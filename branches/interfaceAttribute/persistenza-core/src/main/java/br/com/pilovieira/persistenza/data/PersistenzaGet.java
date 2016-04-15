@@ -14,8 +14,11 @@ class PersistenzaGet {
 		this.sessionManager = sessionManager;
 	}
 	
+	//TODO Pilo corrige essa bagaça
 	public <T> List<T> all(final Class<T> clazz) {
-		return sessionManager.list(clazz, new Criterion[]{});
+		List<T> list = sessionManager.list(clazz, new Criterion[]{});
+		
+		return new InterfaceAttributeSync(sessionManager).syncList(list);
 	}
 	
 	public <T> List<T> like(Class<T> clazz, String attribute, String value) {
@@ -27,7 +30,9 @@ class PersistenzaGet {
 	}
 	
 	public <T> List<T> search(Class<T> clazz, Criterion... criterions) {
-		return sessionManager.list(clazz, criterions);
+		List<T> list = sessionManager.list(clazz, criterions);
+		
+		return new InterfaceAttributeSync(sessionManager).syncList(list);
 	}
 
 	public <T> List<T> between(final Class<T> clazz, final String attribute, final Date lo, final Date hi) {

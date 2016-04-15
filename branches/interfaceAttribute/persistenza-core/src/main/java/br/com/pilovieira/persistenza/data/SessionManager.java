@@ -8,7 +8,7 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Criterion;
 
-import br.com.pilovieira.persistenza.PersistenzaManager;
+import br.com.pilovieira.persistenza.PersistenzaHeap;
 
 import com.google.common.base.Function;
 
@@ -67,7 +67,7 @@ class SessionManager {
 	
 	public SessionFactory getSessionFactory() {
 		if (sessionFactory == null)
-			sessionFactory = PersistenzaManager.getFactory();
+			sessionFactory = PersistenzaHeap.getSessionFactory();
 		
 		if (sessionFactory == null)
 			throw new RuntimeException("Session Factory not loaded!");
