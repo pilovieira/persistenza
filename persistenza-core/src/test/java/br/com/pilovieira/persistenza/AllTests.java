@@ -13,6 +13,7 @@ import br.com.pilovieira.persistenza.data.SessionManagerTest;
 import br.com.pilovieira.persistenza.data.YoloTest;
 import br.com.pilovieira.persistenza.db.HyperSqlTest;
 import br.com.pilovieira.persistenza.db.PostgreSqlTest;
+import br.com.pilovieira.persistenza.functional.InterfacciaFunctionalTest;
 import br.com.pilovieira.persistenza.functional.PersistBufferFunctionalTest;
 import br.com.pilovieira.persistenza.functional.PersistYoloFunctionalTest;
 import br.com.pilovieira.persistenza.functional.PersistenzaGetFunctionalTest;
@@ -34,6 +35,7 @@ import br.com.pilovieira.persistenza.functional.PersistenzaGetFunctionalTest;
 			HyperSqlTest.class,
 			PostgreSqlTest.class,
 			
+			InterfacciaFunctionalTest.class,
 			PersistenzaGetFunctionalTest.class,
 			PersistYoloFunctionalTest.class,
 			PersistBufferFunctionalTest.class

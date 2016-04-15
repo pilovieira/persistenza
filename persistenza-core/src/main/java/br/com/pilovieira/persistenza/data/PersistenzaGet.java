@@ -9,33 +9,41 @@ import org.hibernate.criterion.Restrictions;
 class PersistenzaGet {
 	
 	private SessionManager sessionManager;
+	private InterfacciaGet interfaccia;
 	
 	public PersistenzaGet(SessionManager sessionManager) {
 		this.sessionManager = sessionManager;
+		this.interfaccia = new InterfacciaGet(sessionManager);
 	}
 	
 	public <T> List<T> all(final Class<T> clazz) {
-		return sessionManager.list(clazz, new Criterion[]{});
+		List<T> list = sessionManager.list(clazz, new Criterion[]{});
+		return interfaccia.list(list);
 	}
 	
 	public <T> List<T> like(Class<T> clazz, String attribute, String value) {
-		return sessionManager.list(clazz, Restrictions.ilike(attribute, "%" + value + "%"));
+		List<T> list = sessionManager.list(clazz, Restrictions.ilike(attribute, "%" + value + "%"));
+		return interfaccia.list(list);
 	}
 	
 	public <T> List<T> search(Class<T> clazz, String attribute, Object value) {
-		return search(clazz, PersistenzaRestrictions.eq(attribute, value));
+		List<T> list = search(clazz, PersistenzaRestrictions.eq(attribute, value));
+		return interfaccia.list(list);
 	}
 	
 	public <T> List<T> search(Class<T> clazz, Criterion... criterions) {
-		return sessionManager.list(clazz, criterions);
+		List<T> list = sessionManager.list(clazz, criterions);
+		return interfaccia.list(list);
 	}
 
 	public <T> List<T> between(final Class<T> clazz, final String attribute, final Date lo, final Date hi) {
-		return sessionManager.list(clazz, Restrictions.between(attribute, lo, hi));
+		List<T> list = sessionManager.list(clazz, Restrictions.between(attribute, lo, hi));
+		return interfaccia.list(list);
 	}
 
 	public <T> T get(final Class<T> clazz, final int id) {
 		List<T> list = sessionManager.list(clazz, Restrictions.idEq(id));
+		list = interfaccia.list(list);
 		return list.isEmpty() ? null : list.get(0);
 	}
 
