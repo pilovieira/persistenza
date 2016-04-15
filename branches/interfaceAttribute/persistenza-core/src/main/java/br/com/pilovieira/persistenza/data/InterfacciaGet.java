@@ -21,7 +21,8 @@ import com.google.common.base.Function;
 
 class InterfacciaGet {
 	
-	private static final String GET_ATTRIBUTE_ID_SQL_FORMAT = "select %s from %s where %s = '%s'";
+	private static final String PAR_ENTITY_ID = "entityId";
+	private static final String GET_ATTRIBUTE_ID_SQL_FORMAT = "select %s from %s where %s = :entityId";
 	
 	private SessionManager sessionManager;
 	
@@ -56,14 +57,16 @@ class InterfacciaGet {
 		PersistentClass classMapping = PersistenzaHeap.getConfiguration().getClassMapping(entity.getClass().getName());
 		String entityTable = classMapping.getTable().getName();
 		String entityColumnId = ((Column)classMapping.getIdentifier().getColumnIterator().next()).getName();
-		Object entityColumnIdValue = readField(getFieldsListWithAnnotation(entity.getClass(), Id.class).get(0), entity, true);
+		final Integer entityColumnIdValue = (Integer) readField(getFieldsListWithAnnotation(entity.getClass(), Id.class).get(0), entity, true);
 		
-		final String sql = String.format(GET_ATTRIBUTE_ID_SQL_FORMAT, fieldName, entityTable, entityColumnId, entityColumnIdValue);
+		final String sql = String.format(GET_ATTRIBUTE_ID_SQL_FORMAT, fieldName, entityTable, entityColumnId);
 		
 		return sessionManager.execute(new Function<Session, Integer>() {
 			@Override
 			public Integer apply(Session session) {
-				return (Integer)session.createSQLQuery(sql).uniqueResult();
+				return (Integer)session.createQuery(sql)
+						.setParameter(PAR_ENTITY_ID, entityColumnIdValue)
+						.uniqueResult();
 			}
 		});
 	}
