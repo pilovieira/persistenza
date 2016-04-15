@@ -13,10 +13,13 @@ class Buffer implements PersistStrategy {
 	
 	private List<Object> persistEntities = new LinkedList<>();
 	private List<Object> deleteEntities = new LinkedList<>();
+	
 	private SessionManager sessionManager;
+	private InterfacciaSet interfaccia;
 
 	public Buffer(SessionManager sessionManager) {
 		this.sessionManager = sessionManager;
+		interfaccia = new InterfacciaSet();
 	}
 	
 	@Override
@@ -43,6 +46,8 @@ class Buffer implements PersistStrategy {
 					session.saveOrUpdate(entity);
 				for (Object entity : deleteEntities)
 					session.delete(entity);
+				
+				interfaccia.set(session, persistEntities);
 				return null;
 			}
 		});
