@@ -64,7 +64,7 @@ class InterfacciaGet {
 		return sessionManager.execute(new Function<Session, Integer>() {
 			@Override
 			public Integer apply(Session session) {
-				return (Integer)session.createQuery(sql)
+				return (Integer)session.createSQLQuery(sql)
 						.setParameter(PAR_ENTITY_ID, entityColumnIdValue)
 						.uniqueResult();
 			}

@@ -27,8 +27,7 @@ class PersistenzaGet {
 	}
 	
 	public <T> List<T> search(Class<T> clazz, String attribute, Object value) {
-		List<T> list = search(clazz, PersistenzaRestrictions.eq(attribute, value));
-		return interfaccia.list(list);
+		return search(clazz, PersistenzaRestrictions.eq(attribute, value));
 	}
 	
 	public <T> List<T> search(Class<T> clazz, Criterion... criterions) {
