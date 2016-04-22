@@ -46,6 +46,10 @@ public class PersistenzaHeap {
 		return typesScanner;
 	}
 	
+	static void flushTypesScanner() {
+		typesScanner = null;
+	}
+	
 	private static void loadTypesScanner() {
 		ConfigurationBuilder config = new ConfigurationBuilder();
 		config.setUrls(ClasspathHelper.forClassLoader());
