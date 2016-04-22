@@ -16,6 +16,7 @@ public class EntityExporter {
 	private SchemaExport schemaExport; 
 
 	public EntityExporter() {
+		PersistenzaHeap.flushTypesScanner();
 		load();
 	}
 
@@ -35,6 +36,8 @@ public class EntityExporter {
 	}
 	
 	public void export(boolean drop, boolean create) {
+		//schemaExport.setOutputFile("C:\\scriptgerado.txt");
+		
 		if (drop)
 			schemaExport.drop(true, true);
 		if (create)
