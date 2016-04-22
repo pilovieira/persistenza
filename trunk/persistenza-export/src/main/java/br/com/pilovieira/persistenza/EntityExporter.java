@@ -25,7 +25,6 @@ public class EntityExporter {
 		
 		new EntityLoader(config).load();
 		schemaExport = new SchemaExport(config);
-		checkStatus();
 	}
 	
 	public List<String> getEntities() {
@@ -35,29 +34,10 @@ public class EntityExporter {
 		return values;
 	}
 	
-	public void export(boolean drop, boolean create) {
-		//schemaExport.setOutputFile("C:\\scriptgerado.txt");
+	public void export(String outputFileName) {
+		if (!outputFileName.isEmpty())
+			schemaExport.setOutputFile(outputFileName);
 		
-		if (drop)
-			schemaExport.drop(true, true);
-		if (create)
-			schemaExport.create(true, true);
-		
-		checkStatus();
+		schemaExport.execute(true, false, false, true);
 	}
-	
-	private void checkStatus() {
-		if (schemaExport.getExceptions().isEmpty())
-			return;
-		
-		throwExceptions();
-	}
-
-	private void throwExceptions() {
-		String exceptions = "Executado com as seguintes exceptions:\r\n";
-		for (Object ex : schemaExport.getExceptions())
-			exceptions += ex.toString() + "\r\n";
-			
-		throw new RuntimeException(exceptions);
-	}	
 }

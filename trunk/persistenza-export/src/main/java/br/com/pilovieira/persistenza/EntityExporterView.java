@@ -11,7 +11,6 @@ import java.util.Set;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
-import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -43,77 +42,79 @@ public class EntityExporterView extends JFrame {
 	
 	private File selectedFile;
 	private EntityExporter exporter;
-	private JCheckBox chkDrop;
-	private JCheckBox chkCreate;
-	private JTextField textUrl;
-	private JTextField textUser;
-	private JTextField textPass;
-	private JLabel lblUrl;
-	private JLabel lblUser;
-	private JLabel lblPass;
-	private JLabel lblOptions;
-	private JPanel panelDbProperties;
 	private JPanel panelEntityExporter;
 	private JComboBox<Class<? extends Database>> dropDatabases;
 	private JLabel lblDatabase;
-	private JCheckBox chkSsl;
+	private JLabel lblScriptFile;
+	private JTextField textOutputFilePath;
+	private JButton button;
 
 	public static void main(String[] args) {
 		new EntityExporterView();
 	}
 	
 	public EntityExporterView() {
-		setTitle("Persistenza Export");
-		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		setBounds(100, 100, 550, 400);
+		setTitle("Persistenza SQL Exporter");
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setBounds(100, 100, 700, 400);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
-		contentPane.setLayout(new MigLayout("", "[grow]", "[][grow]"));
+		contentPane.setLayout(new MigLayout("", "[grow]", "[grow]"));
+		setLocationRelativeTo(null);
 		
-		createPanelDbProperties();
 		createPanelEntityExporter();
 		setVisible(true);
 	}
 
-	private void createPanelDbProperties() {
-		panelDbProperties = new JPanel();
-		panelDbProperties.setBorder(new TitledBorder(null, "Database Properties", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-		contentPane.add(panelDbProperties, "cell 0 0,grow");
-		panelDbProperties.setLayout(new MigLayout("", "[][grow]", "[][][][][]"));
-		
-		lblUrl = new JLabel("URL:");
-		panelDbProperties.add(lblUrl, "flowy,cell 0 0,alignx right");
-		
-		textUrl = new JTextField("jdbc:postgresql://localhost:5432/myDataBase");
-		panelDbProperties.add(textUrl, "cell 1 0,growx");
-		
-		lblUser = new JLabel("USER:");
-		panelDbProperties.add(lblUser, "cell 0 1,alignx right");
-		
-		textUser = new JTextField();
-		panelDbProperties.add(textUser, "cell 1 1,growx");
-		
-		lblPass = new JLabel("PASS:");
-		panelDbProperties.add(lblPass, "cell 0 2,alignx right");
-		
-		textPass = new JTextField();
-		panelDbProperties.add(textPass, "cell 1 2,growx");
-		
-		lblOptions = new JLabel("OPTIONS:");
-		panelDbProperties.add(lblOptions, "cell 0 3,alignx right");
+	private void createPanelEntityExporter() {
+		panelEntityExporter = new JPanel();
+		panelEntityExporter.setBorder(new TitledBorder(null, "Entity Exporter", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		contentPane.add(panelEntityExporter, "cell 0 0,grow");
+		panelEntityExporter.setLayout(new MigLayout("", "[grow]", "[][][][][grow][]"));
 		
 		lblDatabase = new JLabel("DATABASE:");
-		panelDbProperties.add(lblDatabase, "cell 0 4,alignx trailing");
+		panelEntityExporter.add(lblDatabase, "flowx,cell 0 0");
+		
+		JLabel lblJarParaExportar = new JLabel("JAR para exportar:");
+		panelEntityExporter.add(lblJarParaExportar, "flowx,cell 0 1");
+		
+		textPathJar = new JTextField();
+		panelEntityExporter.add(textPathJar, "cell 0 1,growx");
+		
+		JButton btnProcurar = new JButton("Procurar");
+		panelEntityExporter.add(btnProcurar, "cell 0 1");
+		
+		lblScriptFile = new JLabel("Arquivo de sa\u00EDda:");
+		panelEntityExporter.add(lblScriptFile, "flowx,cell 0 2");
+		
+		lblEntidades = new JLabel("Entidades contempladas:");
+		panelEntityExporter.add(lblEntidades, "cell 0 3");
+		btnProcurar.addActionListener(new FileLoader());
+
+		listEntidades = new JList<String>();
+		JScrollPane scroll = new JScrollPane(listEntidades);
+		
+		panelEntityExporter.add(scroll, "cell 0 4,grow");
+		
+		btnExportar = new JButton("Exportar");
+		panelEntityExporter.add(btnExportar, "cell 0 5,alignx right");
+		
+		textOutputFilePath = new JTextField();
+		panelEntityExporter.add(textOutputFilePath, "cell 0 2,growx");
+		
+		button = new JButton("Procurar");
+		button.addActionListener(new SelectPath());
+		panelEntityExporter.add(button, "cell 0 2");
 		
 		dropDatabases = new JComboBox<Class<? extends Database>>();
-		panelDbProperties.add(dropDatabases, "cell 1 4,growx");
+		panelEntityExporter.add(dropDatabases, "cell 0 0,growx");
+		dropDatabases.addActionListener(new LoadDatabase());
+		btnExportar.addActionListener(new Export());
 		
-		chkSsl = new JCheckBox("SSL");
-		panelDbProperties.add(chkSsl, "cell 1 3");
 		populateDatabases();
 	}
-
+	
 	private void populateDatabases() {
 		ConfigurationBuilder config = new ConfigurationBuilder();
 		config.setUrls(ClasspathHelper.forClassLoader());
@@ -124,40 +125,19 @@ public class EntityExporterView extends JFrame {
 		for (Class<? extends Database> dbClass : subtypes)
 			dropDatabases.addItem(dbClass);
 	}
-
-	private void createPanelEntityExporter() {
-		panelEntityExporter = new JPanel();
-		panelEntityExporter.setBorder(new TitledBorder(null, "Entity Exporter", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-		contentPane.add(panelEntityExporter, "cell 0 1,grow");
-		panelEntityExporter.setLayout(new MigLayout("", "[grow]", "[][][grow][]"));
-		
-		JLabel lblJarParaExportar = new JLabel("JAR para exportar:");
-		panelEntityExporter.add(lblJarParaExportar, "flowx,cell 0 0");
-		
-		textPathJar = new JTextField();
-		panelEntityExporter.add(textPathJar, "cell 0 0,growx");
-		
-		JButton btnProcurar = new JButton("Procurar");
-		panelEntityExporter.add(btnProcurar, "cell 0 0");
-		
-		lblEntidades = new JLabel("Entidades:");
-		panelEntityExporter.add(lblEntidades, "cell 0 1");
-		btnProcurar.addActionListener(new FileLoader());
-
-		listEntidades = new JList<String>();
-		JScrollPane scroll = new JScrollPane(listEntidades);
-		
-		panelEntityExporter.add(scroll, "cell 0 2,grow");
-		
-		chkDrop = new JCheckBox("Drop");
-		panelEntityExporter.add(chkDrop, "flowx,cell 0 3,alignx right");
-		
-		chkCreate = new JCheckBox("Create");
-		panelEntityExporter.add(chkCreate, "cell 0 3,alignx right");
-		
-		btnExportar = new JButton("Exportar");
-		panelEntityExporter.add(btnExportar, "cell 0 3,alignx right");
-		btnExportar.addActionListener(new Export());
+	
+	private class LoadDatabase implements ActionListener {
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			try {
+				@SuppressWarnings("unchecked")
+				Constructor<? extends Database> constructor = ((Class<? extends Database>)dropDatabases.getSelectedItem()).getConstructor(String.class, String.class, String.class);
+				Database database = constructor.newInstance("", "", "");
+				database.loadProperties();
+			} catch (Exception ex) {
+				throw new RuntimeException(ex);
+			}
+		}
 	}
 	
 	private class FileLoader implements ActionListener {
@@ -167,7 +147,6 @@ public class EntityExporterView extends JFrame {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			try {
-				loadDatabase();
 				loadEntities();
 			} catch (Exception ex) {
 				showMessageDialog(EntityExporterView.this, ex.getMessage());
@@ -175,18 +154,6 @@ public class EntityExporterView extends JFrame {
 			}
 		}
 		
-		private void loadDatabase() {
-			try {
-				@SuppressWarnings("unchecked")
-				Constructor<? extends Database> constructor = ((Class<? extends Database>)dropDatabases.getSelectedItem()).getConstructor(String.class, String.class, String.class);
-				Database database = constructor.newInstance(textUrl.getText(), textUser.getText(), textPass.getText());
-				database.setSsl(chkSsl.isSelected());
-				PersistenzaManager.load(database);
-			} catch (Exception e) {
-				throw new RuntimeException(e);
-			}
-		}
-
 		private void loadEntities() {
 			selectFile();
 			refreshClassLoader();
@@ -223,13 +190,24 @@ public class EntityExporterView extends JFrame {
 			listEntidades.setModel(listModel);
 		}
 	}
+	
+	private class SelectPath implements ActionListener {
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			JFileChooser fileChooser = new JFileChooser();
+			fileChooser.showSaveDialog(null);
+			
+			File file = fileChooser.getSelectedFile();
+			textOutputFilePath.setText(file.getAbsolutePath() + ".txt");
+		}
+	}
 
 	private class Export implements ActionListener {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			try {
-				exporter.export(chkDrop.isSelected(), chkCreate.isSelected());
+				exporter.export(textOutputFilePath.getText());
 				showMessageDialog(EntityExporterView.this, "Exportado com sucesso!");
 			} catch (Exception ex) {
 				showMessageDialog(EntityExporterView.this, ex.getMessage());
