@@ -46,8 +46,8 @@ public class PersistenzaHeap {
 		return typesScanner;
 	}
 	
-	static void flushTypesScanner() {
-		typesScanner = null;
+	static void setTypesScanner(Reflections typesScanner) {
+		PersistenzaHeap.typesScanner = typesScanner;
 	}
 	
 	private static void loadTypesScanner() {

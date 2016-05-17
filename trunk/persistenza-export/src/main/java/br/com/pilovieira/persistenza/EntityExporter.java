@@ -16,7 +16,7 @@ public class EntityExporter {
 	private SchemaExport schemaExport; 
 
 	public EntityExporter() {
-		PersistenzaHeap.flushTypesScanner();
+		PersistenzaHeap.setTypesScanner(null);
 		load();
 	}
 

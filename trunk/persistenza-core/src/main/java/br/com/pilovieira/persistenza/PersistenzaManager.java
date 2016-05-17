@@ -1,13 +1,21 @@
 package br.com.pilovieira.persistenza;
 
+import static br.com.pilovieira.persistenza.PersistenzaHeap.setTypesScanner;
+
 import java.sql.Connection;
 
 import org.hibernate.cfg.AnnotationConfiguration;
+import org.reflections.Reflections;
 
 public final class PersistenzaManager {
 	
 	public static void load(Database database) {
+		load(database, null);
+	}
+
+	public static void load(Database database, Reflections typesScanner) {
 		setDatabase(database);
+		setTypesScanner(typesScanner);
 		load();
 	}
 	
