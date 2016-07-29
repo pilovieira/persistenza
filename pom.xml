@@ -125,11 +125,6 @@
 			<plugin>
 				<artifactId>maven-release-plugin</artifactId>
 				<version>2.5.2</version>
-				<configuration>
-					<tagBase>
-						https://subversion.assembla.com/svn/lockTracker.persistenza/tags
-					</tagBase>
-				</configuration>
 			</plugin>
 		</plugins>
 		<extensions>
@@ -140,17 +135,18 @@
 			</extension>
 		</extensions>
 	</build>
-
+	
 	<scm>
-		<url>https://subversion.assembla.com/svn/lockTracker.persistenza/trunk</url>
-		<connection>scm:svn:https://subversion.assembla.com/svn/lockTracker.persistenza/trunk</connection>
-		<developerConnection>scm:svn:https://subversion.assembla.com/svn/lockTracker.persistenza/trunk</developerConnection>
+		<connection>scm:git:git@github.com:pilovieira/persistenza.git</connection>
+		<developerConnection>scm:git:git@github.com:pilovieira/persistenza.git</developerConnection>
+		<url>git@github.com:pilovieira/persistenza.git</url>
+		<tag>HEAD</tag>
 	</scm>
 
 	<distributionManagement>
 		<repository>
 			<id>PiloVieiraReleases</id>
-			<name>PiloVieira Releases Repo</name>
+			<name>PiloVieira Releases Repository</name>
 			<url>ftp://pilovieira.com.br</url>
 		</repository>
 	</distributionManagement>
