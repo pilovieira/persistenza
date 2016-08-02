@@ -3,3 +3,4 @@
 *.classpath
 persistenza-core/.settings/org.eclipse.jdt.core.prefs
 *.prefs
+persistenza-export/dependency-reduced-pom.xml

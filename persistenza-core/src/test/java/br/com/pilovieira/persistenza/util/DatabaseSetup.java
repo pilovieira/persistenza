@@ -6,6 +6,7 @@ import java.net.URLClassLoader;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Iterator;
 
 import org.reflections.util.ClasspathHelper;
 
@@ -15,22 +16,20 @@ import br.com.pilovieira.persistenza.db.HyperSql;
 @SuppressWarnings("rawtypes")
 public class DatabaseSetup {
 	
-	public static void initialize(Class... entities) {
+	private static final TestClassLoader classLoader = new TestClassLoader();
+
+	public static void initialize() {
 		System.setProperty("hibernate.hbm2ddl.auto", "create-drop");
 		
-		TestClassLoader classLoader = new TestClassLoader();
-		classLoader.addUrls(entities);
-		
+		try {
+			Field scl;
+			scl = ClassLoader.class.getDeclaredField("scl");
+			scl.setAccessible(true);
+			scl.set(null, classLoader);
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
 		Thread.currentThread().setContextClassLoader(classLoader);
-//		try {
-//			Field scl;
-//			scl = ClassLoader.class.getDeclaredField("scl");
-//			scl.setAccessible(true); // Set accessible
-//			scl.set(null, classLoader);
-//		} catch (NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		} // Get system class loader
 		
 		HyperSql hyperSql = new HyperSql("jdbc:hsqldb:mem:.", "sa", "");
 		hyperSql.setShowSql(true);
@@ -54,6 +53,7 @@ public class DatabaseSetup {
 
 		public TestClassLoader() {
 			super(getSystemURLs());
+			addUrls();
 		}
 		
 		public TestClassLoader(URL[] urls) {
@@ -64,10 +64,12 @@ public class DatabaseSetup {
 			return ((URLClassLoader)ClassLoader.getSystemClassLoader()).getURLs();
 		}
 		
-		public void addUrls(Class... classes) {
-			for (Class clazz : classes)
-				super.addURL(ClasspathHelper.forClass(clazz, ClassLoader.getSystemClassLoader()));
+		private void addUrls() {
+			Iterator<URL> iterator = ClasspathHelper.forPackage("br.com.pilovieira.persistenza", ClassLoader.getSystemClassLoader()).iterator();
+			
+			while(iterator.hasNext())
+				super.addURL(iterator.next());
 		}
 	}
-	
+
 }

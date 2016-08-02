@@ -5,7 +5,7 @@ import javassist.ClassPool;
 import javassist.CtClass;
 import javassist.NotFoundException;
 
-public class EntityDecorator {
+class EntityDecorator {
 	
 	public Class<?> decorateAndLoad(String className) {
 		try {

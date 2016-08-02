@@ -8,24 +8,21 @@ import java.util.List;
 
 import org.apache.commons.lang3.reflect.MethodUtils;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 
 import br.com.pilovieira.persistenza.data.Persistenza;
 import br.com.pilovieira.persistenza.entity.EntityWithoutId;
 import br.com.pilovieira.persistenza.util.DatabaseSetup;
+import br.com.pilovieira.persistenza.util.PersistenzaRunner;
 
+@RunWith(PersistenzaRunner.class)
 public class EntityDecoratorTest {
 	
-	@BeforeClass
-	public static void initialize() {
-		DatabaseSetup.initialize();
+	@Before
+	public void setup() throws SQLException {
+		DatabaseSetup.clear(EntityWithoutId.class);
 	}
-	
-//	@Before
-//	public void setup() throws SQLException {
-//		DatabaseSetup.clear(EntityWithoutId.class);
-//	}
 	
 	@Test
 	public void registerEntityWithoutId() throws Exception {
