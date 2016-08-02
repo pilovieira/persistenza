@@ -1,7 +1,7 @@
 package br.com.pilovieira.persistenza;
 
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertNull;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 import java.util.Properties;
 
@@ -9,6 +9,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import br.com.pilovieira.persistenza.util.DatabaseFake;
@@ -27,6 +28,8 @@ public class DatabaseTest {
 	private static final String URL_VALUE = "localhost:5432";
 	private static final String USER_VALUE = "user";
 	private static final String PASS_VALUE = "pass";
+
+	@Mock private OptionalConfigs configs;
 
 	private Properties properties;
 	private DatabaseFake subject;
@@ -86,6 +89,13 @@ public class DatabaseTest {
 		subject.loadProperties();
 		
 		assertEquals("Property Url", System.getProperty(PROPERTY_CONNECTION_URL), "localhost:5432?ssl=true");
+	}
+	
+	@Test
+	public void optionalConfigs() {
+		subject.setConfigs(configs);
+		
+		assertEquals("Optional Configs", configs, subject.getConfigs());
 	}
 	
 }

@@ -19,6 +19,7 @@ public abstract class Database {
 	private String password;
 	private boolean showSql;
 	private boolean ssl;
+	private OptionalConfigs configs = new OptionalConfigs();
 	
 	public Database(String url, String username, String password) {
 		this.url = url;
@@ -32,6 +33,14 @@ public abstract class Database {
 	
 	public void setSsl(boolean ssl) {
 		this.ssl = ssl;
+	}
+	
+	public void setConfigs(OptionalConfigs configs) {
+		this.configs = configs;
+	}
+	
+	public OptionalConfigs getConfigs() {
+		return configs;
 	}
 	
 	public Connection getConnection() {
