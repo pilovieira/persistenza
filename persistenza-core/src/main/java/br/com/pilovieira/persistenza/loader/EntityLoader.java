@@ -22,7 +22,7 @@ public class EntityLoader {
 	}
 	
 	public void load() {
-		ClassArredatore arredatore = new ClassArredatore();
+		Arredatore arredatore = new Arredatore();
 		Iterator<String> iterator = getEntitiesNames().iterator();
 		
 		while(iterator.hasNext()) {

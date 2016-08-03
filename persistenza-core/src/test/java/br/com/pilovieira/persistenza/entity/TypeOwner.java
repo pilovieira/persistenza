@@ -18,6 +18,7 @@ public class TypeOwner {
 	@Interfaccia(name = "mask")
 	private Type att;
 	
+	//juts for hsql create the column
 	Integer mask;
 	
 	public TypeOwner() {}

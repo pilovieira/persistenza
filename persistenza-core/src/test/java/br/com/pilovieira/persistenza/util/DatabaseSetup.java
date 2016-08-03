@@ -21,6 +21,15 @@ public class DatabaseSetup {
 	public static void initialize() {
 		System.setProperty("hibernate.hbm2ddl.auto", "create-drop");
 		
+		refreshClassLoader();
+		
+		HyperSql hyperSql = new HyperSql("jdbc:hsqldb:mem:.", "sa", "");
+		hyperSql.setShowSql(true);
+		
+		PersistenzaManager.load(hyperSql);
+	}
+
+	public static void refreshClassLoader() {
 		try {
 			Field scl;
 			scl = ClassLoader.class.getDeclaredField("scl");
@@ -30,11 +39,6 @@ public class DatabaseSetup {
 			throw new RuntimeException(e);
 		}
 		Thread.currentThread().setContextClassLoader(classLoader);
-		
-		HyperSql hyperSql = new HyperSql("jdbc:hsqldb:mem:.", "sa", "");
-		hyperSql.setShowSql(true);
-		
-		PersistenzaManager.load(hyperSql);
 	}
 
 	public static void clear(Class... entities) throws SQLException {
