@@ -12,13 +12,14 @@ import javassist.bytecode.annotation.Annotation;
 
 import javax.persistence.Id;
 
-class IdDecorator {
+class IdDecorator implements Section {
 	
 	private static final String ID_DECLARATION = "public int id;";
 	private static final String SETTER = "setId";
 	private static final String GETTER = "getId";
 
-	public void createIdentifierIfNeeded(CtClass ctClass) throws CannotCompileException, ClassNotFoundException {
+	@Override
+	public void decorate(CtClass ctClass) throws CannotCompileException, ClassNotFoundException {
 		for (CtField field : ctClass.getDeclaredFields())
 			if (field.hasAnnotation(Id.class))
 				return;

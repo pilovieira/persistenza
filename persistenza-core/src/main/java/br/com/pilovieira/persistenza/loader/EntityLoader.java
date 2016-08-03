@@ -22,12 +22,12 @@ public class EntityLoader {
 	}
 	
 	public void load() {
-		EntityDecorator decorator = new EntityDecorator();
+		ClassArredatore arredatore = new ClassArredatore();
 		Iterator<String> iterator = getEntitiesNames().iterator();
 		
 		while(iterator.hasNext()) {
 			String className = iterator.next();
-			Class<?> clazz = decorator.decorateAndLoad(className);
+			Class<?> clazz = arredatore.arredate(className);
 			config.addAnnotatedClass(clazz);
 		}
 	}
