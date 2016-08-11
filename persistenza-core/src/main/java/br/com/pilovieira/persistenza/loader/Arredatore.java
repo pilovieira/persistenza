@@ -14,7 +14,8 @@ class Arredatore {
 		this(
 				new SectionId(),
 				new SectionInterfaccia(),
-				new SectionOneToOne()
+				new SectionOneToOne(),
+				new SectionOneToMany()
 			);
 	}
 

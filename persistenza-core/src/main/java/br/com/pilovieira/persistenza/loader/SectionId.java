@@ -27,7 +27,7 @@ class SectionId implements Section {
 		if (idField == null)
 			idField = createDefaultIdentifierField(ctClass);
 		
-		ArredatoreUtils.addAnnotationsInField(ctClass, idField, javax.persistence.Id.class);
+		ArredatoreAnnotator.addAnnotationsInField(ctClass, idField, javax.persistence.Id.class);
 	}
 	
 	private CtField createDefaultIdentifierField(CtClass ctClass) throws CannotCompileException, ClassNotFoundException {
