@@ -10,6 +10,8 @@ import java.sql.SQLException;
 import java.util.List;
 
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Transient;
 
 import org.apache.commons.lang3.reflect.MethodUtils;
@@ -21,6 +23,8 @@ import br.com.pilovieira.persistenza.annotation.Interfaccia;
 import br.com.pilovieira.persistenza.data.Persistenza;
 import br.com.pilovieira.persistenza.entity.EntityWithIdWithoutAnnotation;
 import br.com.pilovieira.persistenza.entity.EntityWithoutId;
+import br.com.pilovieira.persistenza.entity.ManyToOneRelashionship;
+import br.com.pilovieira.persistenza.entity.OneToOneRelashionshipWithoutAnnotation;
 import br.com.pilovieira.persistenza.entity.TypeOwnerOnlyInterfacciaAnnotation;
 import br.com.pilovieira.persistenza.entity.TypeOwnerTransient;
 import br.com.pilovieira.persistenza.entity.TypeOwnerWithoutAnnotation;
@@ -115,12 +119,36 @@ public class ArredatoreFunctionalTest {
 	public void registerEntityIgnoringInterfacciaAnnotationsWhenTransientIsExplicitDeclared() throws Exception {
 		Class<?> clazz = Thread.currentThread().getContextClassLoader().loadClass(TypeOwnerTransient.class.getName());
 		
-		Field interfaceField = clazz.getDeclaredField("att");
-		assertNotNull(interfaceField);
+		Field field = clazz.getDeclaredField("att");
+		assertNotNull(field);
 		
-		Annotation[] fieldAnnotations = interfaceField.getDeclaredAnnotations();
+		Annotation[] fieldAnnotations = field.getDeclaredAnnotations();
 		assertEquals("Annotations quantity", 1, fieldAnnotations.length);
 		assertEquals(Transient.class.getName(), fieldAnnotations[0].annotationType().getName());
+	}
+
+	@Test
+	public void registerEntityDecoratingOneToOneField() throws Exception {
+		Class<?> clazz = Thread.currentThread().getContextClassLoader().loadClass(OneToOneRelashionshipWithoutAnnotation.class.getName());
+		
+		Field dogField = clazz.getDeclaredField("dog");
+		assertNotNull(dogField);
+		
+		Annotation[] fieldAnnotations = dogField.getDeclaredAnnotations();
+		assertEquals("Annotations quantity", 1, fieldAnnotations.length);
+		assertEquals(OneToOne.class.getName(), fieldAnnotations[0].annotationType().getName());
+	}
+
+	@Test
+	public void registerEntityWithManyToOneFieldWithoutDecorate() throws Exception {
+		Class<?> clazz = Thread.currentThread().getContextClassLoader().loadClass(ManyToOneRelashionship.class.getName());
+		
+		Field dogField = clazz.getDeclaredField("dog");
+		assertNotNull(dogField);
+		
+		Annotation[] fieldAnnotations = dogField.getDeclaredAnnotations();
+		assertEquals("Annotations quantity", 1, fieldAnnotations.length);
+		assertEquals(ManyToOne.class.getName(), fieldAnnotations[0].annotationType().getName());
 	}
 
 }
