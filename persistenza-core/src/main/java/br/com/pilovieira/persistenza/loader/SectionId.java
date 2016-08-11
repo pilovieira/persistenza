@@ -6,32 +6,39 @@ import javassist.CtField;
 import javassist.CtNewMethod;
 import javassist.Modifier;
 
-import javax.persistence.Id;
-
 class SectionId implements Section {
 	
+	private static final String ID_NAME = "id";
 	private static final String ID_DECLARATION = "public int id;";
 	private static final String SETTER = "setId";
 	private static final String GETTER = "getId";
 
 	@Override
 	public void decorate(CtClass ctClass) throws CannotCompileException, ClassNotFoundException {
-		for (CtField field : ctClass.getDeclaredFields())
-			if (field.hasAnnotation(Id.class))
+		CtField idField = null;
+
+		for (CtField field : ctClass.getDeclaredFields()) {
+			if (field.hasAnnotation(javax.persistence.Id.class))
 				return;
+			if (ID_NAME.equals(field.getName()))
+				idField = field;
+		}
+
+		if (idField == null)
+			idField = createDefaultIdentifierField(ctClass);
 		
-		createDefaultIdentifier(ctClass);
+		ArredatoreUtils.addAnnotationsInField(ctClass, idField, javax.persistence.Id.class);
 	}
 	
-	private void createDefaultIdentifier(CtClass ctClass) throws CannotCompileException, ClassNotFoundException {
-		CtField ctField = CtField.make(ID_DECLARATION, ctClass);
-		ctField.setModifiers(Modifier.PRIVATE);
+	private CtField createDefaultIdentifierField(CtClass ctClass) throws CannotCompileException, ClassNotFoundException {
+		CtField idField = CtField.make(ID_DECLARATION, ctClass);
+		idField.setModifiers(Modifier.PRIVATE);
 		
-		ArredatoreUtils.addAnnotationsInField(ctClass, ctField, javax.persistence.Id.class);
+		ctClass.addField(idField);
+		ctClass.addMethod(CtNewMethod.getter(GETTER, idField));
+		ctClass.addMethod(CtNewMethod.setter(SETTER, idField));
 		
-		ctClass.addField(ctField);
-		ctClass.addMethod(CtNewMethod.getter(GETTER, ctField));
-		ctClass.addMethod(CtNewMethod.setter(SETTER, ctField));
+		return idField;
 	}
 
 }
