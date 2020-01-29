@@ -21,7 +21,7 @@ import br.com.pilovieira.persistenza.PersistenzaHeap;
 import br.com.pilovieira.persistenza.entity.Dog;
 
 @RunWith(MockitoJUnitRunner.class)
-public class ArredatoreTest {
+public class ClassArredatoreTest {
 
 	@Rule public ExpectedException thrown = ExpectedException.none();
 	
@@ -29,14 +29,14 @@ public class ArredatoreTest {
 	@Mock private OptionalConfigs configs;
 	@Mock private SectionImpl section;
 	
-	private Arredatore subject;
+	private ClassArredatore subject;
 
 	@Before
 	public void setup() {
 		PersistenzaHeapMock.setDatabase(database);
 		when(database.getConfigs()).thenReturn(configs);
 		
-		subject = new Arredatore(section);
+		subject = new ClassArredatore(section);
 	}
 	
 	@Test
@@ -54,7 +54,7 @@ public class ArredatoreTest {
 	public void decorateClass() throws Exception {
 		when(configs.isAutoDecorate()).thenReturn(true);
 		
-		subject.arredate("br.com.pilovieira.persistenza.loader.ArredatoreTest$AwayClass");
+		subject.arredate("br.com.pilovieira.persistenza.loader.ClassArredatoreTest$AwayClass");
 		
 		verify(database).getConfigs();
 		verify(configs).isAutoDecorate();

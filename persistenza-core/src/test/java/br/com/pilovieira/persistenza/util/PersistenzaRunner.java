@@ -21,20 +21,11 @@ public class PersistenzaRunner extends MockitoJUnitRunner {
 
 	@Override
 	public void run(RunNotifier notifier) {
-		if (!init)
-			init();
-		
-		super.run(notifier);
-	}
-	
-	private void init() {
-		try {
+		if (!init) {
 			DatabaseSetup.initialize();
 			init = true;
-		} catch (Throwable e) {
-			e.printStackTrace();
-			throw e;
 		}
+		super.run(notifier);
 	}
 
 }

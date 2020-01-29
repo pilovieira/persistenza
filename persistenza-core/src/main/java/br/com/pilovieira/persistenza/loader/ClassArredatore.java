@@ -6,18 +6,15 @@ import javassist.CtClass;
 import javassist.NotFoundException;
 import br.com.pilovieira.persistenza.PersistenzaHeap;
 
-class Arredatore {
+class ClassArredatore {
 	
 	private Section[] sections;
 
-	public Arredatore() {
-		this(
-				new SectionId(),
-				new SectionInterfaccia()
-			);
+	public ClassArredatore() {
+		this(new IdDecorator());
 	}
 
-	Arredatore(Section... sections) {
+	ClassArredatore(Section... sections) {
 		this.sections = sections;
 	}
 	
