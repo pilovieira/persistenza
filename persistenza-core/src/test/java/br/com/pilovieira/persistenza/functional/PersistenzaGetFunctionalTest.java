@@ -16,8 +16,8 @@ import java.util.List;
 
 import org.hibernate.criterion.Criterion;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 
 import br.com.pilovieira.persistenza.data.Persistenza;
 import br.com.pilovieira.persistenza.data.PersistenzaRestrictions;
@@ -25,11 +25,14 @@ import br.com.pilovieira.persistenza.entity.Config;
 import br.com.pilovieira.persistenza.entity.Dog;
 import br.com.pilovieira.persistenza.entity.Event;
 import br.com.pilovieira.persistenza.util.DatabaseSetup;
-import br.com.pilovieira.persistenza.util.PersistenzaRunner;
 import br.com.pilovieira.persistenza.util.Support;
 
-@RunWith(PersistenzaRunner.class)
 public class PersistenzaGetFunctionalTest {
+	
+	@BeforeClass
+	public static void initialize() {
+		DatabaseSetup.initialize(Dog.class, Event.class, Config.class);
+	}
 	
 	@Before
 	public void setup() throws SQLException {

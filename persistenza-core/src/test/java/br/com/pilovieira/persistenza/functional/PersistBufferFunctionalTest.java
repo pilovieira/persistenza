@@ -9,15 +9,12 @@ import java.util.List;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 
 import br.com.pilovieira.persistenza.data.Persistenza;
 import br.com.pilovieira.persistenza.entity.Cat;
 import br.com.pilovieira.persistenza.entity.Dog;
 import br.com.pilovieira.persistenza.entity.Man;
-import br.com.pilovieira.persistenza.util.PersistenzaRunner;
 
-@RunWith(PersistenzaRunner.class)
 public class PersistBufferFunctionalTest extends PersistenzaSetFunctionalTest {
 	
 	@Before
