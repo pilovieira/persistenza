@@ -18,13 +18,11 @@ import br.com.pilovieira.persistenza.functional.InterfacciaFunctionalTest;
 import br.com.pilovieira.persistenza.functional.PersistBufferFunctionalTest;
 import br.com.pilovieira.persistenza.functional.PersistYoloFunctionalTest;
 import br.com.pilovieira.persistenza.functional.PersistenzaGetFunctionalTest;
-import br.com.pilovieira.persistenza.loader.ArredatoreTest;
 
 @RunWith(Suite.class)
 @SuiteClasses(
 		{
 			DatabaseTest.class,
-			OptionalConfigsTest.class,
 			PersistenzaManagerTest.class,
 			
 			BufferTest.class,
@@ -38,13 +36,11 @@ import br.com.pilovieira.persistenza.loader.ArredatoreTest;
 			HyperSqlTest.class,
 			PostgreSqlTest.class,
 			
-			ArredatoreFunctionalTest.class,
 			InterfacciaFunctionalTest.class,
-			PersistBufferFunctionalTest.class,
 			PersistenzaGetFunctionalTest.class,
 			PersistYoloFunctionalTest.class,
-			
-			ArredatoreTest.class
+			PersistBufferFunctionalTest.class,
+			ArredatoreFunctionalTest.class
 		})
 public class AllTests {
 
