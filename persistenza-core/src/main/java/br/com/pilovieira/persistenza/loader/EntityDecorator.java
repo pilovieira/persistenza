@@ -1,24 +1,14 @@
 package br.com.pilovieira.persistenza.loader;
 
+import br.com.pilovieira.persistenza.PersistenzaHeap;
 import javassist.CannotCompileException;
 import javassist.ClassPool;
 import javassist.CtClass;
 import javassist.NotFoundException;
-import br.com.pilovieira.persistenza.PersistenzaHeap;
 
-class ClassArredatore {
+class EntityDecorator {
 	
-	private Section[] sections;
-
-	public ClassArredatore() {
-		this(new IdDecorator());
-	}
-
-	ClassArredatore(Section... sections) {
-		this.sections = sections;
-	}
-	
-	public Class<?> arredate(String className) {
+	public Class<?> decorateAndLoad(String className) {
 		try {
 			return decorateOrCry(className);
 		} catch (Exception e) {
@@ -26,7 +16,7 @@ class ClassArredatore {
 		}
 	}
 	
-	private Class<?> decorateOrCry(String className) throws Exception {
+	private Class<?> decorateOrCry(String className) throws NotFoundException, CannotCompileException, ClassNotFoundException {
 		if (!PersistenzaHeap.getOptionalConfigs().isAutoDecorate())
 			return forName(className);
 		
@@ -55,9 +45,8 @@ class ClassArredatore {
 		return Class.forName(className);
 	}
 
-	private void decorateBySections(CtClass ctClass) throws Exception {
-		for (Section section : sections)
-			section.decorate(ctClass);
+	private void decorateBySections(CtClass ctClass) throws CannotCompileException, ClassNotFoundException {
+		new IdDecorator().createIdentifierIfNeeded(ctClass);
 	}
 	
 }
