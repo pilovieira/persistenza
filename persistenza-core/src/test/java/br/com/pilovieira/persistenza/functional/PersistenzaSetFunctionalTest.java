@@ -3,19 +3,16 @@ package br.com.pilovieira.persistenza.functional;
 import java.sql.SQLException;
 
 import org.junit.Before;
-import org.junit.BeforeClass;
+import org.junit.runner.RunWith;
 
 import br.com.pilovieira.persistenza.entity.Cat;
 import br.com.pilovieira.persistenza.entity.Dog;
 import br.com.pilovieira.persistenza.entity.Man;
 import br.com.pilovieira.persistenza.util.DatabaseSetup;
+import br.com.pilovieira.persistenza.util.PersistenzaRunner;
 
+@RunWith(PersistenzaRunner.class)
 public abstract class PersistenzaSetFunctionalTest {
-	
-	@BeforeClass
-	public static void initialize() {
-		DatabaseSetup.initialize(Dog.class, Man.class, Cat.class);
-	}
 	
 	@Before
 	public void setup() throws SQLException {

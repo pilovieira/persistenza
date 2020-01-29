@@ -16,8 +16,8 @@ import java.util.List;
 
 import org.hibernate.criterion.Criterion;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 
 import br.com.pilovieira.persistenza.data.Persistenza;
 import br.com.pilovieira.persistenza.data.PersistenzaRestrictions;
@@ -25,14 +25,11 @@ import br.com.pilovieira.persistenza.entity.Config;
 import br.com.pilovieira.persistenza.entity.Dog;
 import br.com.pilovieira.persistenza.entity.Event;
 import br.com.pilovieira.persistenza.util.DatabaseSetup;
+import br.com.pilovieira.persistenza.util.PersistenzaRunner;
 import br.com.pilovieira.persistenza.util.Support;
 
+@RunWith(PersistenzaRunner.class)
 public class PersistenzaGetFunctionalTest {
-	
-	@BeforeClass
-	public static void initialize() {
-		DatabaseSetup.initialize(Dog.class, Event.class, Config.class);
-	}
 	
 	@Before
 	public void setup() throws SQLException {
@@ -90,7 +87,7 @@ public class PersistenzaGetFunctionalTest {
 	}
 
 	@Test
-	public void searchWithCriterion() {
+	public void searchWithCriterionEq() {
 		Persistenza.persist(new Dog(4, null));
 		
 		Criterion criterion = PersistenzaRestrictions.eq(Dog.ATR_NAME, null);
@@ -99,6 +96,18 @@ public class PersistenzaGetFunctionalTest {
 		assertEquals("Dogs size", 1, dogs.size());
 		Dog dog = dogs.get(0);
 		assertNull("Name should be null", dog.getName());
+	}
+	
+	@Test
+	public void searchWithCriterionLike() {
+		Persistenza.persist(new Dog(4, "DogeMaster"));
+		
+		Criterion criterion = PersistenzaRestrictions.like(Dog.ATR_NAME, "geM");
+		List<Dog> dogs = Persistenza.search(Dog.class, criterion);
+		
+		assertEquals("Dogs size", 1, dogs.size());
+		Dog dog = dogs.get(0);
+		assertEquals("Dog name", "DogeMaster", dog.getName());
 	}
 
 	@Test

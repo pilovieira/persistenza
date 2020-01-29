@@ -7,24 +7,18 @@ import java.util.List;
 
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.runners.MockitoJUnitRunner;
 
 import br.com.pilovieira.persistenza.data.Persistenza;
-import br.com.pilovieira.persistenza.entity.att.TypeImplementer;
-import br.com.pilovieira.persistenza.entity.att.TypeOwner;
+import br.com.pilovieira.persistenza.entity.TypeImplementer;
+import br.com.pilovieira.persistenza.entity.TypeOwner;
 import br.com.pilovieira.persistenza.util.DatabaseSetup;
+import br.com.pilovieira.persistenza.util.PersistenzaRunner;
 
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(PersistenzaRunner.class)
 public class InterfacciaFunctionalTest {
 
-	@BeforeClass
-	public static void initialize() {
-		DatabaseSetup.initialize(TypeImplementer.class, TypeOwner.class);
-	}
-	
 	@Before
 	public void setup() throws SQLException {
 		DatabaseSetup.clear(TypeImplementer.class, TypeOwner.class);
