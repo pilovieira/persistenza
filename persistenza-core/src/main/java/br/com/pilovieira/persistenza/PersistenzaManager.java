@@ -7,8 +7,6 @@ import java.sql.Connection;
 import org.hibernate.cfg.AnnotationConfiguration;
 import org.reflections.Reflections;
 
-import br.com.pilovieira.persistenza.loader.EntityLoader;
-
 public final class PersistenzaManager {
 	
 	public static void load(Database database) {

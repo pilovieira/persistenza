@@ -1,6 +1,5 @@
 package br.com.pilovieira.persistenza.util;
 
-import java.lang.reflect.Field;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.sql.Connection;
@@ -20,17 +19,7 @@ public class DatabaseSetup {
 		
 		TestClassLoader classLoader = new TestClassLoader();
 		classLoader.addUrls(entities);
-		
 		Thread.currentThread().setContextClassLoader(classLoader);
-//		try {
-//			Field scl;
-//			scl = ClassLoader.class.getDeclaredField("scl");
-//			scl.setAccessible(true); // Set accessible
-//			scl.set(null, classLoader);
-//		} catch (NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		} // Get system class loader
 		
 		HyperSql hyperSql = new HyperSql("jdbc:hsqldb:mem:.", "sa", "");
 		hyperSql.setShowSql(true);

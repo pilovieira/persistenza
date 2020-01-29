@@ -8,7 +8,7 @@ import java.util.List;
 import org.hibernate.cfg.AnnotationConfiguration;
 import org.hibernate.tool.hbm2ddl.SchemaExport;
 
-import br.com.pilovieira.persistenza.loader.EntityLoader;
+import br.com.pilovieira.persistenza.EntityLoader;
 
 public class EntityExporter {
 
