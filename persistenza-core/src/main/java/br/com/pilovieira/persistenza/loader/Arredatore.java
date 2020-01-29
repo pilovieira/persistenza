@@ -13,8 +13,7 @@ class Arredatore {
 	public Arredatore() {
 		this(
 				new SectionId(),
-				new SectionInterfaccia(),
-				new SectionOneToOne()
+				new SectionInterfaccia()
 			);
 	}
 
