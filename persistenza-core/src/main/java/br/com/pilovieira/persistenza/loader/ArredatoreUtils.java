@@ -30,16 +30,12 @@ class ArredatoreUtils {
 		return needed;
 	}
 
-	private static void addAnnotations(CtClass ctClass, CtField ctField, List<Class<?>> newAnnotations) throws ClassNotFoundException {
+	private static void addAnnotations(CtClass ctClass, CtField ctField, List<Class<?>> neededAnnotations) {
 		ClassFile cfile = ctClass.getClassFile();
 		ConstPool cpool = cfile.getConstPool();
 		
 		AnnotationsAttribute attr = new AnnotationsAttribute(cpool, AnnotationsAttribute.visibleTag);
-		
-		for (Object object : ctField.getAnnotations())
-			attr.addAnnotation(new Annotation(object.toString().replace("@", ""), cpool));
-		
-		for (Class<?> annotation : newAnnotations)
+		for (Class<?> annotation : neededAnnotations)
 			attr.addAnnotation(new Annotation(annotation.getName(), cpool));
 		
 		ctField.getFieldInfo().addAttribute(attr);

@@ -10,7 +10,7 @@ class SectionInterfaccia implements Section {
 	@Override
 	public void decorate(CtClass ctClass) throws CannotCompileException, ClassNotFoundException, NotFoundException {
 		for (CtField ctField : ctClass.getDeclaredFields())
-			if (ctField.getType().isInterface() && !ctField.hasAnnotation(javax.persistence.Transient.class))
+			if (ctField.getType().isInterface())
 				decorateInterfaceIfNeeded(ctClass, ctField);
 	}
 	
