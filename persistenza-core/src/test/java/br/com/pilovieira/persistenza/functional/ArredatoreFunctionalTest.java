@@ -9,7 +9,6 @@ import java.lang.reflect.Method;
 import java.sql.SQLException;
 import java.util.List;
 
-import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
@@ -52,6 +51,8 @@ public class ArredatoreFunctionalTest {
 		Class<?> clazz = Thread.currentThread().getContextClassLoader().loadClass(EntityWithoutId.class.getName());
 		
 		Object entity = clazz.newInstance();
+		Method idSetter = MethodUtils.getAccessibleMethod(clazz, "setId", int.class);
+		idSetter.invoke(entity, 1);
 		Method nameSetter = MethodUtils.getAccessibleMethod(clazz, "setName", String.class);
 		nameSetter.invoke(entity, "Joseph");
 		
@@ -79,9 +80,8 @@ public class ArredatoreFunctionalTest {
 		assertNotNull(idField);
 		
 		Annotation[] fieldAnnotations = idField.getDeclaredAnnotations();
-		assertEquals("Annotations quantity", 2, fieldAnnotations.length);
+		assertEquals("Annotations quantity", 1, fieldAnnotations.length);
 		assertEquals(Id.class.getName(), fieldAnnotations[0].annotationType().getName());
-		assertEquals(GeneratedValue.class.getName(), fieldAnnotations[1].annotationType().getName());
 	}
 
 	@Test
@@ -92,9 +92,8 @@ public class ArredatoreFunctionalTest {
 		assertNotNull(idField);
 		
 		Annotation[] fieldAnnotations = idField.getDeclaredAnnotations();
-		assertEquals("Annotations quantity", 2, fieldAnnotations.length);
+		assertEquals("Annotations quantity", 1, fieldAnnotations.length);
 		assertEquals(Id.class.getName(), fieldAnnotations[0].annotationType().getName());
-		assertEquals(GeneratedValue.class.getName(), fieldAnnotations[1].annotationType().getName());
 	}
 	
 	@Test
