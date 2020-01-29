@@ -36,11 +36,7 @@ public class PersistenzaHeap {
 		return database;
 	}
 	
-	public static OptionalConfigs getOptionalConfigs() {
-		return getDatabase().getConfigs();
-	}
-	
-	protected static void setDatabase(Database database) {
+	static void setDatabase(Database database) {
 		PersistenzaHeap.database = database;
 	}
 	
@@ -63,5 +59,5 @@ public class PersistenzaHeap {
 		typesScanner = new Reflections(config);
 	}
 	
-	protected PersistenzaHeap() {}
+	private PersistenzaHeap() {}
 }

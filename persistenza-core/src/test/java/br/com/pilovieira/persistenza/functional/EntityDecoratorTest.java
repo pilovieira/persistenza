@@ -17,7 +17,7 @@ import br.com.pilovieira.persistenza.util.DatabaseSetup;
 import br.com.pilovieira.persistenza.util.PersistenzaRunner;
 
 @RunWith(PersistenzaRunner.class)
-public class EntityDecoratorFunctionalTest {
+public class EntityDecoratorTest {
 	
 	@Before
 	public void setup() throws SQLException {

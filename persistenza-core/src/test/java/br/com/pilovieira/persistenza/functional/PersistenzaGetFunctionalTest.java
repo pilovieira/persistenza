@@ -87,7 +87,7 @@ public class PersistenzaGetFunctionalTest {
 	}
 
 	@Test
-	public void searchWithCriterionEq() {
+	public void searchWithCriterion() {
 		Persistenza.persist(new Dog(4, null));
 		
 		Criterion criterion = PersistenzaRestrictions.eq(Dog.ATR_NAME, null);
@@ -96,18 +96,6 @@ public class PersistenzaGetFunctionalTest {
 		assertEquals("Dogs size", 1, dogs.size());
 		Dog dog = dogs.get(0);
 		assertNull("Name should be null", dog.getName());
-	}
-	
-	@Test
-	public void searchWithCriterionLike() {
-		Persistenza.persist(new Dog(4, "DogeMaster"));
-		
-		Criterion criterion = PersistenzaRestrictions.like(Dog.ATR_NAME, "geM");
-		List<Dog> dogs = Persistenza.search(Dog.class, criterion);
-		
-		assertEquals("Dogs size", 1, dogs.size());
-		Dog dog = dogs.get(0);
-		assertEquals("Dog name", "DogeMaster", dog.getName());
 	}
 
 	@Test

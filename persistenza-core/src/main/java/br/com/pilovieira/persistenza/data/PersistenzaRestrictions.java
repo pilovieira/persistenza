@@ -4,7 +4,7 @@ import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Restrictions;
 
 
-public final class PersistenzaRestrictions {
+public class PersistenzaRestrictions {
 	
 	public static Criterion eq(String attribute, Object value) {
 		if (value != null)
