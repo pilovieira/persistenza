@@ -1,0 +1,5 @@
+.idea
+persistenza-core/target
+persistenza-export/target
+persistenza-install/target
+*.iml
