@@ -11,13 +11,10 @@ import java.util.List;
 
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Transient;
 
 import org.apache.commons.lang3.reflect.MethodUtils;
-import org.hibernate.annotations.Cascade;
-import org.hibernate.annotations.IndexColumn;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -27,10 +24,6 @@ import br.com.pilovieira.persistenza.data.Persistenza;
 import br.com.pilovieira.persistenza.entity.EntityWithIdWithoutAnnotation;
 import br.com.pilovieira.persistenza.entity.EntityWithoutId;
 import br.com.pilovieira.persistenza.entity.ManyToOneRelashionship;
-import br.com.pilovieira.persistenza.entity.OneToManyListRelashionship;
-import br.com.pilovieira.persistenza.entity.OneToManyListRelashionshipWithoutAnnotation;
-import br.com.pilovieira.persistenza.entity.OneToManySetRelashionship;
-import br.com.pilovieira.persistenza.entity.OneToManySetRelashionshipWithoutAnnotation;
 import br.com.pilovieira.persistenza.entity.OneToOneRelashionshipWithoutAnnotation;
 import br.com.pilovieira.persistenza.entity.TypeOwnerOnlyInterfacciaAnnotation;
 import br.com.pilovieira.persistenza.entity.TypeOwnerTransient;
@@ -156,58 +149,6 @@ public class ArredatoreFunctionalTest {
 		Annotation[] fieldAnnotations = dogField.getDeclaredAnnotations();
 		assertEquals("Annotations quantity", 1, fieldAnnotations.length);
 		assertEquals(ManyToOne.class.getName(), fieldAnnotations[0].annotationType().getName());
-	}
-	
-	@Test
-	public void registerEntityDecoratingOneToManyListField() throws Exception {
-		Class<?> clazz = Thread.currentThread().getContextClassLoader().loadClass(OneToManyListRelashionshipWithoutAnnotation.class.getName());
-		
-		Field dogsListField = clazz.getDeclaredField("dogs");
-		assertNotNull(dogsListField);
-		
-		Annotation[] fieldAnnotations = dogsListField.getDeclaredAnnotations();
-		assertEquals("Annotations quantity", 3, fieldAnnotations.length);
-		assertEquals(OneToMany.class.getName(), fieldAnnotations[0].annotationType().getName());
-		assertEquals(Cascade.class.getName(), fieldAnnotations[1].annotationType().getName());
-		assertEquals(IndexColumn.class.getName(), fieldAnnotations[2].annotationType().getName());
-	}
-
-	@Test
-	public void registerEntityWithOneToManyListFieldWithoutDecorate() throws Exception {
-		Class<?> clazz = Thread.currentThread().getContextClassLoader().loadClass(OneToManyListRelashionship.class.getName());
-		
-		Field dogsListField = clazz.getDeclaredField("dogs");
-		assertNotNull(dogsListField);
-		
-		Annotation[] fieldAnnotations = dogsListField.getDeclaredAnnotations();
-		assertEquals("Annotations quantity", 1, fieldAnnotations.length);
-		assertEquals(OneToMany.class.getName(), fieldAnnotations[0].annotationType().getName());
-	}
-
-	@Test
-	public void registerEntityDecoratingOneToManySetField() throws Exception {
-		Class<?> clazz = Thread.currentThread().getContextClassLoader().loadClass(OneToManySetRelashionshipWithoutAnnotation.class.getName());
-		
-		Field dogsListField = clazz.getDeclaredField("dogs");
-		assertNotNull(dogsListField);
-		
-		Annotation[] fieldAnnotations = dogsListField.getDeclaredAnnotations();
-		assertEquals("Annotations quantity", 3, fieldAnnotations.length);
-		assertEquals(OneToMany.class.getName(), fieldAnnotations[0].annotationType().getName());
-		assertEquals(Cascade.class.getName(), fieldAnnotations[1].annotationType().getName());
-		assertEquals(IndexColumn.class.getName(), fieldAnnotations[2].annotationType().getName());
-	}
-	
-	@Test
-	public void registerEntityWithOneToManySetFieldWithoutDecorate() throws Exception {
-		Class<?> clazz = Thread.currentThread().getContextClassLoader().loadClass(OneToManySetRelashionship.class.getName());
-		
-		Field dogsListField = clazz.getDeclaredField("dogs");
-		assertNotNull(dogsListField);
-		
-		Annotation[] fieldAnnotations = dogsListField.getDeclaredAnnotations();
-		assertEquals("Annotations quantity", 1, fieldAnnotations.length);
-		assertEquals(OneToMany.class.getName(), fieldAnnotations[0].annotationType().getName());
 	}
 
 }

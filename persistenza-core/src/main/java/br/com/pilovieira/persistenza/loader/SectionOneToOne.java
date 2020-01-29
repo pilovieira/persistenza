@@ -16,13 +16,12 @@ class SectionOneToOne implements Section {
 
 	private boolean isElegible(CtField ctField) throws NotFoundException {
 		return !ArredatoreUtils.isTransient(ctField) &&
-				!ctField.getType().isInterface() &&
 				!ArredatoreUtils.hasAnyRelashionshipAnnotations(ctField) &&
 				!ArredatoreUtils.isAutoMapped(ctField);
 	}
 
 	private void decorateOneToOne(CtClass ctClass, CtField ctField) throws ClassNotFoundException {
-		ArredatoreAnnotator.addAnnotationsInField(ctClass, ctField, javax.persistence.OneToOne.class);
+		ArredatoreUtils.addAnnotationsInField(ctClass, ctField, javax.persistence.OneToOne.class);
 	}
 
 }

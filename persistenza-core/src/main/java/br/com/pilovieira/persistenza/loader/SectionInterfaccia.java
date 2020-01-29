@@ -10,18 +10,12 @@ class SectionInterfaccia implements Section {
 	@Override
 	public void decorate(CtClass ctClass) throws CannotCompileException, ClassNotFoundException, NotFoundException {
 		for (CtField ctField : ctClass.getDeclaredFields())
-			if (isElegible(ctField))
+			if (!ArredatoreUtils.isTransient(ctField) && ctField.getType().isInterface())
 				decorateInterfaceIfNeeded(ctClass, ctField);
-	}
-
-	private boolean isElegible(CtField ctField) throws NotFoundException {
-		return !ArredatoreUtils.isTransient(ctField) && 
-				ctField.getType().isInterface() &&
-				!ArredatoreUtils.isSetListType(ctField);
 	}
 	
 	private void decorateInterfaceIfNeeded(CtClass ctClass, CtField ctField) throws ClassNotFoundException {
-		ArredatoreAnnotator.addAnnotationsInField(ctClass, ctField, 
+		ArredatoreUtils.addAnnotationsInField(ctClass, ctField, 
 				javax.persistence.Transient.class, 
 				br.com.pilovieira.persistenza.annotation.Interfaccia.class);
 	}
